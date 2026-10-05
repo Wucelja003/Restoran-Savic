@@ -6,6 +6,7 @@ import Specialties from "../components/Specialties"
 import Highlights from "../components/Highlights"
 import MenuCategories from "../components/MenuCategories"
 import Showcase from "../components/Showcase"
+import Ambience from "../components/Ambience"
 import Location from "../components/Location"
 import { ease, useEnterDelay } from "../lib/motion"
 import heroImg from "../assets/images/restoran-4.jpg"
@@ -68,10 +69,11 @@ export default function Home() {
 
       <Introduce />
       <MenuCategories />
+      <Showcase />
+      <Ambience />
       <Specialties />
 
       <Highlights />
-      <Showcase />
       <Location />
 
       {/* Poziv na rezervaciju */}

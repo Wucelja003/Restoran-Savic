@@ -356,3 +356,28 @@
   background-position: center top;
   mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 100%);
 }
+
+/* ===== Zid slika u pozadini (sekcija Ambijent) – kolone koje same klize gore/dole ===== */
+.marquee-y {
+  animation: marquee-y var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+}
+
+.marquee-y-reverse {
+  animation-direction: reverse;
+}
+
+@keyframes marquee-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-y {
+    animation: none;
+  }
+}

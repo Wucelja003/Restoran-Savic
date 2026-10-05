@@ -31,7 +31,7 @@ const rows = [
     subtitle: "Za veće društvo",
     title: "Slavlja i proslave",
     text: "Porodična okupljanja, slave i proslave – spremamo pečenje i punu trpezu za vaše društvo, po vašoj meri.",
-    link: { to: "/rezervacija", label: "Rezerviši sto" },
+    link: { to: "/rezervacija#proslave", label: "Rezerviši salu" },
   },
 ]
 
