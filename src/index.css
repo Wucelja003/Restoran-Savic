@@ -381,3 +381,13 @@
     animation: none;
   }
 }
+
+/* Linija "Skrolujte" u dnu hero sekcije */
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}

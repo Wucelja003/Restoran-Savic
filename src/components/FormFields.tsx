@@ -290,7 +290,7 @@ export function DatePicker({
 
 /* ===== Vreme: termini kao dugmići, podeljeni na ručak i večeru ===== */
 
-// TODO: uskladiti termine sa radnim vremenom restorana
+// TODO: uskladiti termine sa radnim vremenom kuhinje (restoran radi 11–23h, čet–sub do 01h)
 const slotGroups = [
   { label: "Ručak", from: 12 * 60, to: 15 * 60 + 30 },
   { label: "Večera", from: 16 * 60, to: 22 * 60 },
