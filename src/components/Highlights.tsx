@@ -8,10 +8,10 @@ import pecurke from "../assets/images/pecurke-2.jpg"
 
 // TODO: prave kategorije jela
 const featured = [
-  { name: "Ćevapi u sosu", category: "Sa roštilja", image: cevapi },
+  { name: "Ćevapi zapečeni u sosu od ajvara", category: "Sa roštilja", image: cevapi },
   { name: "Lignje", category: "Plodovi mora", image: lignje },
   { name: "Losos", category: "Riba", image: losos },
-  { name: "Punjene pečurke", category: "Predjelo", image: pecurke },
+  { name: "Pečurke na žaru", category: "Predjelo", image: pecurke },
 ]
 
 export default function Highlights() {

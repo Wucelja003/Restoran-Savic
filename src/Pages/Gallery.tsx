@@ -9,32 +9,43 @@ import SkewedCarousel from "../components/SkewedCarousel"
 import ReservationOptions from "../components/ReservationOptions"
 import { ease } from "../lib/motion"
 import headerImg from "../assets/galerija/ambijent/ambijent-02.jpg"
+import jelo04 from "../assets/galerija/jela/jelo-04.jpg"
+import jelo05 from "../assets/galerija/jela/jelo-05.jpg"
+import jelo06 from "../assets/galerija/jela/jelo-06.jpg"
+import jelo08 from "../assets/galerija/jela/jelo-08.jpg"
+import jelo09 from "../assets/galerija/jela/jelo-09.jpg"
+import jelo10 from "../assets/galerija/jela/jelo-10.jpg"
+import jelo11 from "../assets/galerija/jela/jelo-11.jpg"
+// Ista jela i slike kao u sekciji "Šta još izdvajamo" na početnoj
+import cevapi from "../assets/images/cevapi.jpg"
+import lignje from "../assets/images/lignje-2.jpg"
+import losos from "../assets/images/losos-3.jpg"
+import pecurke from "../assets/images/pecurke-2.jpg"
 
 const glob = (files: Record<string, string>) =>
   Object.keys(files)
     .sort()
     .map((key) => files[key])
 
-const dishImages = glob(import.meta.glob<string>("../assets/galerija/jela/*.jpg", { eager: true, import: "default" }))
 const ambienceImages = glob(
   import.meta.glob<string>("../assets/galerija/ambijent/*.jpg", { eager: true, import: "default" }),
 )
 
-// TODO: korigovati nazive jela – redosled prati slike jelo-01 … jelo-10
-const dishTitles = [
-  "Kroketi sa sosom",
-  "Punjeni kroketi",
-  "Mešano meso sa roštilja",
-  "Domaće pečenje",
-  "Pljeskavica sa krompirom",
-  "Karađorđeva šnicla",
-  "Roštilj plato",
-  "Pita sa makom",
-  "Domaća štrudla",
-  "Domaća rakija",
+// Jela u karuselu – svaka slika ide zajedno sa svojim nazivom, pa promena naziva ne pomera slike.
+// Da dodaš jelo: ubaci sliku u src/assets/galerija/jela/, uvezi je gore i dodaj red ovde.
+const dishes = [
+  { src: jelo04, title: "Domaće pečenje" },
+  { src: jelo05, title: "Gurmanska pljeskavica" },
+  { src: jelo06, title: "Karađorđeva šnicla" },
+  { src: cevapi, title: "Ćevapi zapečeni u sosu od ajvara" },
+  { src: lignje, title: "Lignje" },
+  { src: losos, title: "Losos" },
+  { src: pecurke, title: "Pečurke na žaru" },
+  { src: jelo08, title: "Pita sa suvim šljivama" },
+  { src: jelo09, title: "Pita sa jabukama" },
+  { src: jelo11, title: "Palačinke u vinskom šatou" },
+  { src: jelo10, title: "Domaća rakija" },
 ]
-
-const dishes = dishImages.map((src, i) => ({ src, title: dishTitles[i] ?? "Specijalitet kuće" }))
 
 // Širina kartice u karuselu zavisi od ekrana
 function useCardWidth() {
@@ -168,7 +179,7 @@ export default function Gallery() {
         <Reveal delay={0.15} className="relative mt-16">
           <SkewedCarousel
             items={dishes}
-            initialIndex={3}
+            initialIndex={1}
             cardWidth={cardWidth}
             aspectRatio="3 / 4"
             rotation={30}

@@ -4,7 +4,7 @@ import dezerti from "../assets/menu/dezerti.jpg"
 import pica from "../assets/menu/pica.jpg"
 
 // Kategorije jelovnika – koriste ih prečica na početnoj i stranica Meni.
-// TODO: slike su privremene (iz foldera swisstransfer_...), tekstovi takođe
+// TODO: slike su privremene (iz foldera swisstransfer_...; dezerti = ROM0956), tekstovi takođe
 export const menuCategories = [
   {
     id: "predjela",

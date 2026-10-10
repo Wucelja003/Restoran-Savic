@@ -7,20 +7,24 @@ import VideoModal from "./VideoModal"
 import PreviewVideo from "./PreviewVideo"
 import tartarPoster from "../assets/posters/tartar.jpg"
 import biftekPoster from "../assets/posters/biftek.jpg"
+import paprikePoster from "../assets/posters/paprike.jpg"
 
 type Dish = {
   name: string
   tags: string[]
-  description: string
-  steps: { title: string; text: string }[]
+  description?: string
+  // "Kako se pravi" – ako jelo nema korake, ovaj deo se ne prikazuje
+  steps?: { title: string; text: string }[]
   video: string
   poster: string
+  // true = u videu nema pripreme: bez dugmeta "Pogledaj pripremu", video samo bez zvuka (ne otvara se)
+  noPreparation?: boolean
 }
 
 // TODO: pravi tekstovi – ovo je privremeno
 const dishes: Dish[] = [
   {
-    name: "Tartar biftek",
+    name: "Tatar biftek",
     tags: ["Specijalitet kuće", "Premium"],
     description:
       "Najfiniji biftek, sečen isključivo nožem, začinjen po recepturi kuće i poslužen na hrskavom domaćem hlebu.",
@@ -29,20 +33,23 @@ const dishes: Dish[] = [
       { title: "Začini kuće", text: "Kapar, kiseli krastavčići, luk i senf – mešamo po recepturi koju čuvamo godinama." },
       { title: "Serviranje", text: "Na toplom, hrskavom hlebu, uz sveže začinsko bilje." },
     ],
-    video: "/videoSavicTartar.mp4",
+    video: "/video/videoSavicTartar.mp4",
     poster: tartarPoster,
   },
   {
     name: "Biftek na žaru",
     tags: ["Sa žara", "Premium"],
-    description: "Sočan medaljon bifteka pečen na jakoj vatri, preliven penušavim maslacem sa belim lukom.",
-    steps: [
-      { title: "Žar", text: "Pečemo na jakoj vatri da se sokovi zatvore unutra." },
-      { title: "Maslac i beli luk", text: "Prelivamo penušavim maslacem sa belim lukom i začinskim biljem." },
-      { title: "Prilog", text: "Služimo uz pečeni krompir i hrskave kolutiće luka." },
-    ],
-    video: "/videoSavic.mp4",
+    description: "Mešamo po recepturi koju čuvamo godinama.",
+    video: "/video/videoSavic.mp4",
     poster: biftekPoster,
+  },
+  {
+    name: "Pohovane punjene paprike",
+    tags: ["Domaća kuhinja", "Specijalitet kuće"],
+    description: "Punimo ih i pohujemo po recepturi koju čuvamo godinama.",
+    video: "/video/paprike.mp4",
+    poster: paprikePoster,
+    noPreparation: true,
   },
 ]
 
@@ -54,6 +61,34 @@ const textStagger: Variants = {
 const textItem: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease } },
+}
+
+const cardClass =
+  "group relative block aspect-[9/16] w-full overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.7)]"
+
+function VideoCard({
+  interactive,
+  onOpen,
+  label,
+  children,
+}: {
+  interactive: boolean
+  onOpen: () => void
+  label: string
+  children: React.ReactNode
+}) {
+  return interactive ? (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={label}
+      className={`${cardClass} cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold`}
+    >
+      {children}
+    </button>
+  ) : (
+    <div className={cardClass}>{children}</div>
+  )
 }
 
 function DishRow({ dish, index }: { dish: Dish; index: number }) {
@@ -103,45 +138,53 @@ function DishRow({ dish, index }: { dish: Dish; index: number }) {
             {dish.name}
           </motion.h3>
 
-          <motion.p variants={textItem} className="mt-5 max-w-lg text-lg leading-relaxed text-white/65">
-            {dish.description}
-          </motion.p>
+          {dish.description && (
+            <motion.p variants={textItem} className="mt-5 max-w-lg text-lg leading-relaxed text-white/65">
+              {dish.description}
+            </motion.p>
+          )}
 
-          <motion.p
-            variants={textItem}
-            className="mt-10 text-[11px] font-semibold uppercase tracking-[0.28em] text-gold"
-          >
-            Kako se pravi
-          </motion.p>
+          {dish.steps && (
+            <motion.p
+              variants={textItem}
+              className="mt-10 text-[11px] font-semibold uppercase tracking-[0.28em] text-gold"
+            >
+              Kako se pravi
+            </motion.p>
+          )}
 
-          <ol className="mt-5 space-y-6">
-            {dish.steps.map((step, i) => (
-              <motion.li key={step.title} variants={textItem} className="relative flex gap-5">
-                {i < dish.steps.length - 1 && (
-                  <span aria-hidden className="absolute left-4 top-10 -bottom-4 w-px bg-gradient-to-b from-gold/40 to-transparent" />
-                )}
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/50 text-xs font-semibold text-gold">
-                  {i + 1}
-                </span>
-                <div>
-                  <p className="font-medium text-white">{step.title}</p>
-                  <p className="mt-1 text-sm leading-relaxed text-white/50">{step.text}</p>
-                </div>
-              </motion.li>
-            ))}
-          </ol>
+          {dish.steps && (
+            <ol className="mt-5 space-y-6">
+              {dish.steps.map((step, i) => (
+                <motion.li key={step.title} variants={textItem} className="relative flex gap-5">
+                  {i < dish.steps!.length - 1 && (
+                    <span aria-hidden className="absolute left-4 top-10 -bottom-4 w-px bg-gradient-to-b from-gold/40 to-transparent" />
+                  )}
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/50 text-xs font-semibold text-gold">
+                    {i + 1}
+                  </span>
+                  <div>
+                    <p className="font-medium text-white">{step.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-white/50">{step.text}</p>
+                  </div>
+                </motion.li>
+              ))}
+            </ol>
+          )}
 
           <motion.div variants={textItem} className="mt-10 flex flex-wrap items-center gap-6">
-            <button
-              type="button"
-              onClick={() => setOpen(true)}
-              className="btn-flow group relative inline-flex items-center gap-3 overflow-hidden rounded-full py-2 pl-6 pr-2 text-xs font-semibold uppercase tracking-[0.18em]"
-            >
-              Pogledaj pripremu
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-gold transition-transform duration-300 group-hover:scale-110">
-                <Play className="ml-0.5 h-3.5 w-3.5 fill-current" />
-              </span>
-            </button>
+            {!dish.noPreparation && (
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="btn-flow group relative inline-flex items-center gap-3 overflow-hidden rounded-full py-2 pl-6 pr-2 text-xs font-semibold uppercase tracking-[0.18em]"
+              >
+                Pogledaj pripremu
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-gold transition-transform duration-300 group-hover:scale-110">
+                  <Play className="ml-0.5 h-3.5 w-3.5 fill-current" />
+                </span>
+              </button>
+            )}
             <Link
               to="/meni"
               className="group inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/70 transition-colors hover:text-gold"
@@ -171,11 +214,11 @@ function DishRow({ dish, index }: { dish: Dish; index: number }) {
             }`}
           />
 
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            aria-label={`Pogledaj pripremu – ${dish.name}`}
-            className="group relative block aspect-[9/16] w-full cursor-pointer overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_40px_80px_rgba(0,0,0,0.7)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+          {/* Kartica: klik otvara video sa zvukom – osim kad u videu nema pripreme */}
+          <VideoCard
+            interactive={!dish.noPreparation}
+            onOpen={() => setOpen(true)}
+            label={`Pogledaj pripremu – ${dish.name}`}
           >
             <PreviewVideo
               src={dish.video}
@@ -192,15 +235,17 @@ function DishRow({ dish, index }: { dish: Dish; index: number }) {
 
             <div className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-ink/40 p-3 pl-4 backdrop-blur-md transition-colors duration-300 group-hover:border-gold/40">
               <div className="text-left">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-white/50">Priprema</p>
+                {!dish.noPreparation && <p className="text-[10px] uppercase tracking-[0.2em] text-white/50">Priprema</p>}
                 <p className="font-serif text-lg text-white">{dish.name}</p>
               </div>
-              <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold text-ink transition-transform duration-300 group-hover:scale-110">
-                <span className="absolute inset-0 animate-ping rounded-full bg-gold/40 [animation-duration:2s]" />
-                <Play className="relative ml-0.5 h-4 w-4 fill-current" />
-              </span>
+              {!dish.noPreparation && (
+                <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold text-ink transition-transform duration-300 group-hover:scale-110">
+                  <span className="absolute inset-0 animate-ping rounded-full bg-gold/40 [animation-duration:2s]" />
+                  <Play className="relative ml-0.5 h-4 w-4 fill-current" />
+                </span>
+              )}
             </div>
-          </button>
+          </VideoCard>
         </motion.div>
       </motion.div>
 

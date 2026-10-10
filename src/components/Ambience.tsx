@@ -74,8 +74,10 @@ export default function Ambience() {
             kao nekada
           </span>
         </h2>
-        <p className="mx-auto mt-6 max-w-md text-lg text-white/70">
-          Drvo, meka svetlost i postavljeni stolovi – mesto gde vreme sporije teče.
+        <span className="mx-auto mt-6 block h-px w-16 bg-gradient-to-r from-transparent via-gold to-transparent" />
+        <p className="mx-auto mt-6 max-w-xl font-old text-xl leading-relaxed text-white/80 italic sm:text-2xl">
+          Estetika od drveta, svetlost Belog grada i uredno servirani stolovi – mesto gde vreme teče{" "}
+          <span className="whitespace-nowrap text-gold">u vašem ritmu.</span>
         </p>
         <Link
           to="/galerija"

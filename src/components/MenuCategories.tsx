@@ -19,13 +19,15 @@ export default function MenuCategories() {
               <span className="streak-x" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Jelovnik</span>
             </div>
-            <h2 className="mt-6 text-4xl sm:text-5xl">
-              Istražite naš{" "}
-              <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">
-                jelovnik
+            <h2 className="mt-6 max-w-xl text-4xl leading-tight sm:text-5xl">
+              Pogledajte šta vas čeka{" "}
+              <span className="whitespace-nowrap">
+                <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">
+                  za našim stolom
+                </span>
+                <span className="text-gold">.</span>
               </span>
             </h2>
-            <p className="mt-4 max-w-md text-white/55">Izaberite kategoriju i pogledajte šta vas čeka za našim stolom.</p>
           </div>
 
           <Link

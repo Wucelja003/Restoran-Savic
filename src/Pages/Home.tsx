@@ -10,7 +10,7 @@ import Ambience from "../components/Ambience"
 import ReservationOptions from "../components/ReservationOptions"
 import Location from "../components/Location"
 import { ease, useEnterDelay } from "../lib/motion"
-import { contact, phoneHref, todayHours } from "../lib/contact"
+import { contact, phoneHref } from "../lib/contact"
 import heroImg from "../assets/images/restoran-4.jpg"
 
 const heroItem: Variants = {
@@ -80,7 +80,7 @@ export default function Home() {
 
           {/* TODO: proveriti tekst sa vlasnikom */}
           <motion.p variants={heroItem} className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/75 sm:text-xl">
-            Pečenje, roštilj i domaća jela po porodičnim receptima – posluženi s pažnjom, u toplini kakvu pamtite.
+            Pečenje i jela iz domaće kuhinje, pripremljena po porodičnim receptima - posluženi s pažnjom, u toplini koju pamtite.
           </motion.p>
 
           <motion.div variants={heroItem} className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -136,7 +136,7 @@ export default function Home() {
           </span>
           <p className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-gold" />
-            Danas otvoreno: {todayHours()}
+            {contact.hours[0].days}: {contact.hours[0].time}
           </p>
         </motion.div>
       </section>

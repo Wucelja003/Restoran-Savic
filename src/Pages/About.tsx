@@ -1,14 +1,19 @@
-import { useRef } from "react"
+import { useCallback, useRef, useState } from "react"
 import { Link } from "react-router-dom"
-import { motion, useInView } from "motion/react"
-import { ArrowRight } from "lucide-react"
+import { AnimatePresence, motion, useInView } from "motion/react"
+import { ArrowRight, Play } from "lucide-react"
 import PageHeader from "../components/PageHeader"
 import Reveal from "../components/Reveal"
 import { PaperSheet, WrittenTitle } from "../components/Vintage"
+import PreviewVideo from "../components/PreviewVideo"
+import VideoModal from "../components/VideoModal"
 import { ease } from "../lib/motion"
 import headerImg from "../assets/images/restoran.jpg"
 import fatherImg from "../assets/images/otac.jpg"
 import logo from "../assets/logo.png"
+import storyPoster1 from "../assets/posters/prica-1.jpg"
+import storyPoster2 from "../assets/posters/prica-2.jpg"
+import storyPoster3 from "../assets/posters/prica-3.jpg"
 
 // TODO: prava priča – tekst je privremen
 const letter = {
@@ -25,7 +30,7 @@ const letter = {
 const values = [
   { title: "Recepti", text: "Zapisani rukom, čuvani generacijama i spremani bez prečica." },
   { title: "Domaćinstvo", text: "Svaki gost je dočekan kao član porodice – toplo i od srca." },
-  { title: "Žar", text: "Roštilj i jela sa žara, pečena polako, baš kao nekada." },
+  { title: "Pečenje", text: "Domaći jaganjci iz peštera i praseće pečenje, na tihoj vatri, baš kao nekada." },
 ]
 
 // Potpis se ispiše kad se završi naslov "Naša priča", pa zatim pečat
@@ -139,6 +144,52 @@ function ValueNote({ title, text, index }: { title: string; text: string; index:
   )
 }
 
+// Videi za "Priča o Restoranu Savić" (public/video/, redom IMG_9332, IMG_9333, IMG_9334).
+// Poster je prvi kadar videa – prikazuje se dok se video ne učita.
+const storyVideos = [
+  { src: "/video/prica-1.mp4", poster: storyPoster1 },
+  { src: "/video/prica-2.mp4", poster: storyPoster2 },
+  { src: "/video/prica-3.mp4", poster: storyPoster3 },
+]
+
+function StoryVideo({ src, poster, index }: { src: string; poster: string; index: number }) {
+  const [open, setOpen] = useState(false)
+  const close = useCallback(() => setOpen(false), [])
+  const tilt = ["-rotate-2", "rotate-1", "-rotate-1"][index % 3]
+
+  return (
+    <Reveal delay={index * 0.15}>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label={`Pogledaj video ${index + 1}`}
+        className={`vintage-photo group relative mx-auto block w-full max-w-[320px] transition-transform duration-500 will-change-transform hover:-translate-y-2 hover:rotate-0 ${tilt}`}
+      >
+        <div className="relative aspect-[9/16] overflow-hidden">
+          <PreviewVideo
+            src={src}
+            poster={poster}
+            paused={open}
+            className="h-full w-full object-cover [filter:sepia(0.35)] transition-[filter] duration-700 group-hover:[filter:none]"
+          />
+          <span className="photo-vignette" />
+          <span className="absolute inset-0 flex items-center justify-center">
+            <span className="relative flex h-16 w-16 items-center justify-center rounded-full border border-gold/60 bg-ink/50 text-gold backdrop-blur-md transition-all duration-300 group-hover:scale-110 group-hover:bg-gold group-hover:text-ink">
+              <span className="absolute inset-0 animate-ping rounded-full border border-gold/40 [animation-duration:2.5s]" />
+              <Play className="ml-0.5 h-6 w-6 fill-current" />
+            </span>
+          </span>
+        </div>
+        <span className="absolute inset-x-0 bottom-3 text-center font-hand text-2xl text-[#3a2717]">0{index + 1}</span>
+      </button>
+
+      <AnimatePresence>
+        {open && <VideoModal src={src} poster={poster} label="Priča o Restoranu Savić" onClose={close} />}
+      </AnimatePresence>
+    </Reveal>
+  )
+}
+
 export default function About() {
   return (
     <>
@@ -190,6 +241,23 @@ export default function About() {
           <div className="mt-16 grid gap-10 sm:grid-cols-3 sm:gap-8">
             {values.map((v, i) => (
               <ValueNote key={v.title} title={v.title} text={v.text} index={i} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Priča o Restoranu Savić – tri videa */}
+      <section className="relative overflow-x-clip border-t border-ink-line py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="text-center">
+            <WrittenTitle className="font-script text-5xl text-gold sm:text-6xl lg:text-7xl" duration={1.8}>
+              Priča o Restoranu Savić
+            </WrittenTitle>
+          </div>
+
+          <div className="mt-16 grid gap-12 sm:grid-cols-3 sm:gap-8">
+            {storyVideos.map((v, i) => (
+              <StoryVideo key={v.src} src={v.src} poster={v.poster} index={i} />
             ))}
           </div>
         </div>

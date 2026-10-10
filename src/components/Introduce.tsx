@@ -8,7 +8,7 @@ import { ease } from "../lib/motion"
 import logo from "../assets/logo.png"
 import videoPoster from "../assets/posters/introduce.jpg"
 
-const VIDEO_SRC = "/videoSavicIntroduce.mp4"
+const VIDEO_SRC = "/video/videoSavicIntroduce.mp4"
 
 function VideoShowcase() {
   const [open, setOpen] = useState(false)
@@ -106,7 +106,7 @@ export default function Introduce() {
             <span className="streak-y" />
             <div className="max-w-xl space-y-5">
               <p className="text-lg leading-relaxed text-white/80 sm:text-xl">
-                <span className="text-white">Već čitav vek</span> za našim stolovima okupljaju se porodice i prijatelji.
+                <span className="text-white">Već čitav vek okupljamo porodice i prijatelji.</span>
               </p>
               <p className="leading-relaxed text-white/55">
                 Spremamo jela od svežih, domaćih namirnica, po receptima koje čuvamo generacijama. Bilo da dolazite na
