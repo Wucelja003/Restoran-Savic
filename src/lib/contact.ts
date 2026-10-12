@@ -5,7 +5,7 @@ export const contact = {
   street: "Radnička 5a",
   city: "11000 Beograd",
   phone: "+381 63 316 777",
-  email: "info@restoransavic.rs",
+  email: "restoransavic@gmail.com",
   hours: [{ days: "Svakog dana", time: "09:00 – 23:00" }],
 }
 

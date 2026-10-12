@@ -75,7 +75,7 @@ function Letter() {
             duration={1.8}
             className="-ml-3 font-script text-4xl text-[#5b3a1a] sm:text-5xl"
           >
-            Porodica Savić
+            Restoran Savić
           </WrittenTitle>
           <svg viewBox="0 0 240 20" className="absolute -bottom-2 left-0 w-56 text-[#5b3a1a]" aria-hidden>
             <motion.path
@@ -113,10 +113,6 @@ function FatherPhoto() {
         <span className="photo-vignette" />
       </div>
 
-      {/* TODO: ime i godine */}
-      <figcaption className="absolute inset-x-0 bottom-3 text-center font-hand text-2xl text-[#3a2717]">
-        Otac našeg vlasnika
-      </figcaption>
     </motion.figure>
   )
 }

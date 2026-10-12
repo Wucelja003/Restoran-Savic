@@ -21,7 +21,7 @@ export const menuCategories = [
   {
     id: "dezerti",
     name: "Dezerti",
-    tagline: "Domaće pite, štrudle i slatki završetak.",
+    tagline: "Domaće pite, palačinke i ostale poslastice.",
     image: dezerti,
   },
   {

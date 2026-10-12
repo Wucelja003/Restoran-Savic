@@ -30,7 +30,7 @@ const dishes: Dish[] = [
       "Najfiniji biftek, sečen isključivo nožem, začinjen po recepturi kuće i poslužen na hrskavom domaćem hlebu.",
     steps: [
       { title: "Ručno seckanje", text: "Biftek sečemo nožem, nikad mašinom, da zadrži strukturu i sočnost." },
-      { title: "Začini kuće", text: "Kapar, kiseli krastavčići, luk i senf – mešamo po recepturi koju čuvamo godinama." },
+      { title: "Začini kuće", text: "Mešamo po recepturi koju čuvamo godinama." },
       { title: "Serviranje", text: "Na toplom, hrskavom hlebu, uz sveže začinsko bilje." },
     ],
     video: "/video/videoSavicTartar.mp4",
@@ -39,7 +39,12 @@ const dishes: Dish[] = [
   {
     name: "Biftek na žaru",
     tags: ["Sa žara", "Premium"],
-    description: "Mešamo po recepturi koju čuvamo godinama.",
+    description: "Sočan medaljon bifteka pečen na jakoj vatri, preliven konjakom",
+    steps: [
+      { title: "Žar", text: "Pečemo na jakoj vatri da se sokovi zatvore unutra." },
+      { title: "Maslac i beli luk", text: "Prelivamo penušavim maslacem sa belim lukom i začinskim biljem." },
+      { title: "Prilog", text: "Služimo uz pečeni krompir i hrskave kolutiće luka." },
+    ],
     video: "/video/videoSavic.mp4",
     poster: biftekPoster,
   },
@@ -47,6 +52,11 @@ const dishes: Dish[] = [
     name: "Pohovane punjene paprike",
     tags: ["Domaća kuhinja", "Specijalitet kuće"],
     description: "Punimo ih i pohujemo po recepturi koju čuvamo godinama.",
+    steps: [
+      { title: "Punjenje", text: "Paprike punimo dimljenom cepkanom butkicom, feta sirom i sitno seckanim belim lukom." },
+      { title: "Pohovanje", text: "Pohujemo ih u prezlama, brašnu i jajima, dok ne postanu savršeno hrskave." },
+      { title: "Serviranje", text: "Služimo ih kao toplo predjelo, uz domaći tartar sos i kriške limuna." },
+    ],
     video: "/video/paprike.mp4",
     poster: paprikePoster,
     noPreparation: true,
