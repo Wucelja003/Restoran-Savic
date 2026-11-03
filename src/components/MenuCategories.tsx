@@ -48,12 +48,17 @@ export default function MenuCategories() {
             return (
               <MotionLink
                 key={cat.id}
-                to={`/meni#${cat.id}`}
+                to={`/meni/${cat.id}`}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10% 0px" }}
                 transition={{ duration: 0.9, delay: i * 0.1, ease }}
-                className="group relative aspect-[3/4] overflow-hidden rounded-[1.75rem] border border-white/10 transition-[flex-grow,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:aspect-auto lg:basis-0 lg:grow lg:hover:grow-[2.2] lg:focus-visible:grow-[2.2]"
+                className={`group relative overflow-hidden rounded-[1.75rem] border border-white/10 transition-[flex-grow,border-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-gold/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold lg:aspect-auto lg:basis-0 lg:grow lg:hover:grow-[2.2] lg:focus-visible:grow-[2.2] ${
+                  // na telefonu (2 kolone) poslednja kartica, ako ostane sama, ide preko cele širine
+                  i === menuCategories.length - 1 && menuCategories.length % 2 === 1
+                    ? "col-span-2 aspect-[16/10] lg:col-span-1"
+                    : "aspect-[3/4]"
+                }`}
               >
                 <img
                   src={cat.image}

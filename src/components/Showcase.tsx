@@ -31,7 +31,7 @@ const rows: Row[] = [
     subtitle: "Ponos naše kuće",
     title: "Pečenje kao nekada",
     text: "Pečeno polako, satima, dok korica ne postane zlatna i hrskava, a meso toliko mekano da se topi. Recept po kome nas gosti pamte generacijama.",
-    link: { to: "/meni#glavna-jela", label: "Glavna jela" },
+    link: { to: "/meni/glavna-jela", label: "Glavna jela" },
   },
   {
     image: pecenjePoster,

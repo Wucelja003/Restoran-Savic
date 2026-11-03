@@ -5,6 +5,8 @@ export const contact = {
   street: "Radnička 5a",
   city: "11000 Beograd",
   phone: "+381 63 316 777",
+  // Broj na koji stižu rezervacije preko WhatsApp-a (može biti isti kao telefon)
+  whatsapp: "+381 63 316 777",
   email: "restoransavic@gmail.com",
   hours: [{ days: "Svakog dana", time: "09:00 – 23:00" }],
 }
@@ -17,6 +19,11 @@ export const socials = {
 
 // Za tel: link – samo cifre i "+", npr. tel:+38163316777
 export const phoneHref = `tel:${contact.phone.replace(/[^\d+]/g, "")}`
+
+// WhatsApp link sa već napisanom porukom: wa.me/38163316777?text=...
+export function whatsappHref(message: string) {
+  return `https://wa.me/${contact.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(message)}`
+}
 
 export const map = {
   // Tačna lokacija restorana (sa Google mape)

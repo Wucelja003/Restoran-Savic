@@ -3,6 +3,7 @@ import Layout from "./components/Layout"
 import Home from "./Pages/Home"
 import About from "./Pages/About"
 import Menu from "./Pages/Menu"
+import MenuCategory from "./Pages/MenuCategory"
 import Gallery from "./Pages/Gallery"
 import Reservation from "./Pages/Reservation"
 import NotFound from "./Pages/NotFound"
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/o-nama" element={<About />} />
         <Route path="/meni" element={<Menu />} />
+        <Route path="/meni/:kategorija" element={<MenuCategory />} />
         <Route path="/galerija" element={<Gallery />} />
         <Route path="/rezervacija" element={<Reservation />} />
         <Route path="*" element={<NotFound />} />

@@ -1,12 +1,13 @@
 import { useState, type FormEvent } from "react"
 import { useLocation } from "react-router-dom"
 import { AnimatePresence, motion } from "motion/react"
-import { Check, Phone, Send } from "lucide-react"
+import { Check, Phone } from "lucide-react"
 import PageHeader from "../components/PageHeader"
 import Reveal from "../components/Reveal"
 import { Chips, DatePicker, Field, Input, Stepper, Textarea, TimeSlots } from "../components/FormFields"
 import { ease } from "../lib/motion"
-import { contact, phoneHref } from "../lib/contact"
+import { contact, phoneHref, whatsappHref } from "../lib/contact"
+import WhatsAppIcon from "../components/WhatsAppIcon"
 import { services, type Service, type ServiceId } from "../lib/reservations"
 import headerImg from "../assets/images/restoran-5.jpg"
 
@@ -30,34 +31,45 @@ function ReservationForm({ service }: { service: Service }) {
     guests: service.id === "sto" ? 2 : 30,
     eventType: service.id === "proslave" ? celebrationTypes[0] : service.id === "ketering" ? cateringTypes[0] : "",
   })
-  const [sent, setSent] = useState(false)
+  const [sentLink, setSentLink] = useState<string | null>(null)
   const [errors, setErrors] = useState({ date: false, time: false })
   const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => setForm((f) => ({ ...f, [key]: value }))
 
-  // Nema servera – otvaramo email program gosta sa popunjenim zahtevom.
-  // TODO: povezati sa servisom za slanje (npr. EmailJS / Formspree) da stiže direktno
+  // Nema servera – otvaramo WhatsApp gosta sa već napisanom porukom ka broju restorana,
+  // gost samo pritisne "Pošalji". Broj se menja u lib/contact.ts (whatsapp).
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     const missing = { date: !form.date, time: service.id === "sto" && !form.time }
     setErrors(missing)
     if (missing.date || missing.time) return
+
+    const [y, m, d] = form.date.split("-").map(Number)
+    const date = new Intl.DateTimeFormat("sr-Latn", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(
+      new Date(y, m - 1, d),
+    )
     const lines = [
-      `Usluga: ${service.title}`,
-      form.eventType && `Vrsta događaja: ${form.eventType}`,
-      `Ime i prezime: ${form.name}`,
-      `Telefon: ${form.phone}`,
-      `Datum: ${form.date.split("-").reverse().join(".")}.`,
-      form.time && `Vreme: ${form.time}`,
-      `Broj ${service.id === "sto" ? "osoba" : "gostiju"}: ${form.guests}`,
-      form.address && `Adresa događaja: ${form.address}`,
-      form.note && `Napomena: ${form.note}`,
-    ].filter(Boolean)
-    const subject = `${service.title} – ${form.name}`
-    window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\r\n"))}`
-    setSent(true)
+      `*Nova rezervacija – ${service.title}*`,
+      "",
+      form.eventType ? `🎉 Vrsta: ${form.eventType}` : null,
+      `👤 Ime i prezime: ${form.name}`,
+      `📞 Telefon: ${form.phone}`,
+      `📅 Datum: ${date}`,
+      form.time ? `🕗 Vreme: ${form.time}` : null,
+      `👥 Broj ${service.id === "sto" ? "osoba" : "gostiju"}: ${form.guests}`,
+      form.address ? `📍 Adresa: ${form.address}` : null,
+      form.note ? `📝 Napomena: ${form.note}` : null,
+      "",
+      "Poslato sa sajta restoran-savic.vercel.app",
+    ].filter((l): l is string => l !== null)
+
+    const link = whatsappHref(lines.join("\n"))
+    // Nova kartica (na telefonu se otvara aplikacija WhatsApp); ako je blokirana, otvori u istoj
+    const win = window.open(link, "_blank", "noopener")
+    if (!win) window.location.href = link
+    setSentLink(link)
   }
 
-  if (sent) {
+  if (sentLink) {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
@@ -68,19 +80,28 @@ function ReservationForm({ service }: { service: Service }) {
         <span className="flex h-20 w-20 items-center justify-center rounded-full border border-gold/50 bg-gold/10 text-gold">
           <Check className="h-9 w-9" />
         </span>
-        <h3 className="mt-6 text-3xl">Zahtev je spreman</h3>
+        <h3 className="mt-6 text-3xl">Još samo jedan korak</h3>
         <p className="mt-3 max-w-sm text-white/60">
-          Otvorili smo vaš email program sa popunjenim zahtevom – samo pritisnite <span className="text-white">Pošalji</span>.
-          Javićemo vam se što pre.
+          Otvorili smo WhatsApp sa vašom porukom – samo pritisnite <span className="text-white">Pošalji</span>. Javićemo vam
+          se što pre da potvrdimo.
         </p>
-        <p className="mt-6 text-sm text-white/45">Ako se email nije otvorio, pozovite nas:</p>
+        <a
+          href={sentLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-8 inline-flex items-center gap-2 rounded-full border border-gold/50 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-ink"
+        >
+          <WhatsAppIcon className="h-4 w-4" />
+          Otvori WhatsApp ponovo
+        </a>
+        <p className="mt-6 text-sm text-white/45">Nemate WhatsApp? Pozovite nas:</p>
         <a href={phoneHref} className="mt-2 inline-flex items-center gap-2 font-serif text-2xl text-gold hover:underline">
           <Phone className="h-5 w-5" />
           {contact.phone}
         </a>
         <button
           type="button"
-          onClick={() => setSent(false)}
+          onClick={() => setSentLink(null)}
           className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-white/50 transition-colors hover:text-gold"
         >
           ← Nazad na formu
@@ -192,11 +213,11 @@ function ReservationForm({ service }: { service: Service }) {
         type="submit"
         className="btn-flow group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full py-4 text-sm font-semibold uppercase tracking-[0.18em]"
       >
-        Pošalji zahtev
-        <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5" />
+        <WhatsAppIcon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+        Pošalji preko WhatsApp-a
       </button>
       <p className="text-center text-xs text-white/40">
-        Polja sa <span className="text-gold">*</span> su obavezna. Klikom se otvara vaš email sa popunjenim zahtevom.
+        Polja sa <span className="text-gold">*</span> su obavezna. Klikom se otvara WhatsApp sa popunjenom porukom.
       </p>
     </form>
   )

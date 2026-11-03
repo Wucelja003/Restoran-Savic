@@ -1,33 +1,41 @@
 import predjela from "../assets/menu/predjela.jpg"
 import glavnaJela from "../assets/menu/glavna-jela.jpg"
+import pecenje from "../assets/pecenje/pecenje-veliko.jpg"
 import dezerti from "../assets/menu/dezerti.jpg"
 import pica from "../assets/menu/pica.jpg"
 
 // Kategorije jelovnika – koriste ih prečica na početnoj i stranica Meni.
-// TODO: slike su privremene (iz foldera swisstransfer_...; dezerti = ROM0956), tekstovi takođe
+// Stavke svake kategorije su u menuItems.ts
+// TODO: slike su privremene (iz foldera swisstransfer_...; dezerti = ROM0956)
 export const menuCategories = [
   {
     id: "predjela",
     name: "Predjela",
-    tagline: "Hladna i topla predjela za lagan početak.",
+    tagline: "Hladna i topla predjela – od domaćeg kajmaka do tatar bifteka.",
     image: predjela,
   },
   {
     id: "glavna-jela",
     name: "Glavna jela",
-    tagline: "Roštilj, jela sa žara i domaći specijaliteti.",
+    tagline: "Doručak, čorbe, roštilj, jela po porudžbini, gotova jela, salate i prilozi.",
     image: glavnaJela,
+  },
+  {
+    id: "pecenje",
+    name: "Pečenje",
+    tagline: "Jagnjeće i praseće pečenje i teletina ispod sača.",
+    image: pecenje,
   },
   {
     id: "dezerti",
     name: "Dezerti",
-    tagline: "Domaće pite, palačinke i ostale poslastice.",
+    tagline: "Palačinke, domaće pite i orasnice.",
     image: dezerti,
   },
   {
     id: "pica",
     name: "Pića",
-    tagline: "Domaće rakije, vina i osvežavajuća pića.",
+    tagline: "Kafa, sokovi, pivo, domaće rakije, žestina i vina.",
     image: pica,
   },
 ] as const
