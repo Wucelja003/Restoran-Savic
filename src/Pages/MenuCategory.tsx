@@ -6,11 +6,14 @@ import { menuCategories } from "../lib/menu"
 import { menuIcons } from "../lib/menuIcons"
 import { menuItems } from "../lib/menuItems"
 import { ease, useEnterDelay } from "../lib/motion"
+import { useLang, useT } from "../i18n/lang"
 
 // Stranica jedne kategorije jelovnika: /meni/predjela, /meni/glavna-jela …
 export default function MenuCategory() {
   const { kategorija } = useParams()
   const enterDelay = useEnterDelay()
+  const t = useT()
+  const { lang } = useLang()
   const index = menuCategories.findIndex((c) => c.id === kategorija)
   if (index === -1) return <Navigate to="/meni" replace />
 
@@ -43,16 +46,16 @@ export default function MenuCategory() {
         >
           <Link to="/meni" className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-gold transition-colors hover:text-white">
             <ArrowLeft className="h-3.5 w-3.5" />
-            Meni · {String(index + 1).padStart(2, "0")} / {total}
+            {t("Meni", "Menu")} · {String(index + 1).padStart(2, "0")} / {total}
           </Link>
-          <h1 className="mt-4 text-6xl leading-none tracking-[0.08em] uppercase sm:text-8xl lg:text-9xl">{cat.name}</h1>
+          <h1 className="mt-4 text-6xl leading-none tracking-[0.08em] uppercase sm:text-8xl lg:text-9xl">{cat.name[lang]}</h1>
           <span className="mt-6 block h-px w-24 bg-gold" />
-          <p className="mt-5 max-w-xl text-lg text-white/70">{cat.tagline}</p>
+          <p className="mt-5 max-w-xl text-lg text-white/70">{cat.tagline[lang]}</p>
         </motion.div>
       </section>
 
       {/* Prelazak na druge kategorije */}
-      <nav className="sticky top-24 z-30 border-y border-ink-line bg-ink/90 backdrop-blur" aria-label="Kategorije jelovnika">
+      <nav className="sticky top-24 z-30 border-y border-ink-line bg-ink/90 backdrop-blur" aria-label={t("Kategorije jelovnika", "Menu categories")}>
         <ul className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 py-3 sm:justify-center sm:px-6">
           {menuCategories.map((c) => {
             const Icon = menuIcons[c.id]
@@ -67,7 +70,7 @@ export default function MenuCategory() {
                   }
                 >
                   <Icon className="h-4 w-4" />
-                  {c.name}
+                  {c.name[lang]}
                 </NavLink>
               </li>
             )
@@ -80,14 +83,14 @@ export default function MenuCategory() {
 
         <div className="mt-6 flex items-start justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-center text-sm text-white/55 sm:items-center">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold sm:mt-0" />
-          <p>Sve cene su izražene u dinarima. Za alergene pitajte konobara.</p>
+          <p>{t("Sve cene su izražene u dinarima. Za alergene pitajte konobara.", "All prices are in Serbian dinars (RSD). Please ask your server about allergens.")}</p>
         </div>
 
         {/* Prethodna / sledeća kategorija */}
         <div className="mt-16 grid gap-4 sm:grid-cols-2">
           {[
-            { c: prev, label: "Prethodno", dir: "prev" as const },
-            { c: next, label: "Sledeće", dir: "next" as const },
+            { c: prev, label: t("Prethodno", "Previous"), dir: "prev" as const },
+            { c: next, label: t("Sledeće", "Next"), dir: "next" as const },
           ].map(({ c, label, dir }) => (
             <Link
               key={dir}
@@ -109,7 +112,7 @@ export default function MenuCategory() {
                 </span>
                 <span>
                   <span className="block text-[10px] uppercase tracking-[0.25em] text-white/50">{label}</span>
-                  <span className="block font-serif text-2xl tracking-[0.1em] text-white uppercase">{c.name}</span>
+                  <span className="block font-serif text-2xl tracking-[0.1em] text-white uppercase">{c.name[lang]}</span>
                 </span>
               </div>
             </Link>

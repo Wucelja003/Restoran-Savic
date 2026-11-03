@@ -5,10 +5,13 @@ import Reveal from "./Reveal"
 import { ease } from "../lib/motion"
 import { menuCategories } from "../lib/menu"
 import { menuIcons } from "../lib/menuIcons"
+import { useLang, useT } from "../i18n/lang"
 
 const MotionLink = motion.create(Link)
 
 export default function MenuCategories() {
+  const t = useT()
+  const { lang } = useLang()
   return (
     <section className="relative overflow-x-clip border-t border-ink-line py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -17,13 +20,13 @@ export default function MenuCategories() {
           <div>
             <div className="flex items-center gap-4">
               <span className="streak-x" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Jelovnik</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Jelovnik", "Menu")}</span>
             </div>
             <h2 className="mt-6 max-w-xl text-4xl leading-tight sm:text-5xl">
-              Pogledajte šta vas čeka{" "}
+              {t("Pogledajte šta vas čeka", "Discover what awaits you")}{" "}
               <span className="whitespace-nowrap">
                 <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">
-                  za našim stolom
+                  {t("za našim stolom", "at our table")}
                 </span>
                 <span className="text-gold">.</span>
               </span>
@@ -34,7 +37,7 @@ export default function MenuCategories() {
             to="/meni"
             className="group inline-flex items-center gap-3 self-start rounded-full border border-gold/50 py-2 pl-6 pr-2 text-xs font-semibold uppercase tracking-[0.18em] text-gold transition-colors duration-300 hover:border-gold hover:bg-gold hover:text-ink md:self-auto"
           >
-            Ceo jelovnik
+            {t("Ceo jelovnik", "Full menu")}
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold text-ink transition-colors duration-300 group-hover:bg-ink group-hover:text-gold">
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </span>
@@ -62,7 +65,7 @@ export default function MenuCategories() {
               >
                 <img
                   src={cat.image}
-                  alt={cat.name}
+                  alt={cat.name[lang]}
                   loading="lazy"
                   className="absolute inset-0 h-full w-full scale-110 object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-100"
                 />
@@ -78,12 +81,12 @@ export default function MenuCategories() {
 
                 {/* Naziv i opis */}
                 <div className="absolute inset-x-4 bottom-4 sm:inset-x-5 sm:bottom-6">
-                  <h3 className="font-serif text-2xl leading-tight text-white sm:text-3xl lg:whitespace-nowrap">{cat.name}</h3>
+                  <h3 className="font-serif text-2xl leading-tight text-white sm:text-3xl lg:whitespace-nowrap">{cat.name[lang]}</h3>
                   <p className="mt-2 hidden max-w-xs text-sm leading-relaxed text-white/65 sm:block lg:max-h-0 lg:overflow-hidden lg:opacity-0 lg:transition-all lg:duration-700 lg:group-hover:max-h-24 lg:group-hover:opacity-100">
-                    {cat.tagline}
+                    {cat.tagline[lang]}
                   </p>
                   <span className="mt-4 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
-                    Pogledaj
+                    {t("Pogledaj", "View")}
                     <ArrowUpRight className="h-4 w-4 transition-transform duration-500 group-hover:rotate-45" />
                   </span>
                 </div>

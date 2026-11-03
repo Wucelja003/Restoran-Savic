@@ -5,6 +5,7 @@ import logo from "../assets/logo.png"
 import { navLinks } from "./navLinks"
 import { ease } from "../lib/motion"
 import { contact, phoneHref, socials } from "../lib/contact"
+import { useLang, useT } from "../i18n/lang"
 
 // lucide-react više nema brend ikonice, pa ih crtamo sami
 function InstagramIcon({ className }: { className?: string }) {
@@ -33,6 +34,8 @@ const socialLinks = [
 const heading = "text-[11px] font-semibold uppercase tracking-[0.25em] text-white/45"
 
 export default function Footer() {
+  const t = useT()
+  const { lang } = useLang()
   return (
     <footer className="relative w-full border-t border-ink-line bg-ink pt-14 sm:pt-20">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
@@ -48,14 +51,14 @@ export default function Footer() {
             <div className="flex items-start gap-5">
               <img src={logo} alt="Restoran Savić" className="h-20 w-auto shrink-0" />
               <p className="font-serif text-2xl leading-[1.1] text-white sm:text-3xl">
-                100 godina
+                {t("100 godina", "100 years")}
                 <br />
-                <span className="text-gold">tradicije</span>
+                <span className="text-gold">{t("tradicije", "of tradition")}</span>
               </p>
             </div>
 
             <div className="max-w-sm">
-              <h4 className={`${heading} mb-3`}>Rezervacije i informacije</h4>
+              <h4 className={`${heading} mb-3`}>{t("Rezervacije i informacije", "Reservations & information")}</h4>
               <div className="flex items-center rounded-full border border-white/15 bg-ink p-1.5 transition-colors duration-300 hover:border-gold/40">
                 <a
                   href={phoneHref}
@@ -68,7 +71,7 @@ export default function Footer() {
                   className="group inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.15em] text-ink transition-colors duration-300 hover:bg-[#f5cf45]"
                 >
                   <Phone className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-12" />
-                  Pozovite nas
+                  {t("Pozovite nas", "Call us")}
                 </a>
               </div>
             </div>
@@ -76,7 +79,7 @@ export default function Footer() {
 
           {/* Navigacija */}
           <div className="flex flex-col gap-4">
-            <h4 className={heading}>Navigacija</h4>
+            <h4 className={heading}>{t("Navigacija", "Navigation")}</h4>
             <ul className="flex flex-col gap-2 font-serif text-xl text-white sm:text-2xl">
               {navLinks.map((link) => (
                 <li key={link.to}>
@@ -84,7 +87,7 @@ export default function Footer() {
                     to={link.to}
                     className="inline-block transition-all duration-300 hover:translate-x-1 hover:text-gold"
                   >
-                    {link.label}
+                    {link.label[lang]}
                   </Link>
                 </li>
               ))}
@@ -93,16 +96,16 @@ export default function Footer() {
 
           {/* Adresa i radno vreme */}
           <div className="flex flex-col gap-4">
-            <h4 className={heading}>Posetite nas</h4>
+            <h4 className={heading}>{t("Posetite nas", "Visit us")}</h4>
             <p className="font-serif text-xl leading-tight text-white sm:text-2xl">
               {contact.street}
               <br />
-              <span className="text-white/60">{contact.city}</span>
+              <span className="text-white/60">{contact.city[lang]}</span>
             </p>
             <ul className="space-y-1 text-sm text-white/55">
               {contact.hours.map((h) => (
-                <li key={h.days}>
-                  {h.days}: <span className="whitespace-nowrap text-white/80">{h.time}</span>
+                <li key={h.days.sr}>
+                  {h.days[lang]}: <span className="whitespace-nowrap text-white/80">{h.time}</span>
                 </li>
               ))}
             </ul>
@@ -110,7 +113,7 @@ export default function Footer() {
 
           {/* Društvene mreže */}
           <div className="flex flex-col gap-4">
-            <h4 className={heading}>Pratite nas</h4>
+            <h4 className={heading}>{t("Pratite nas", "Follow us")}</h4>
             <div className="flex items-center gap-3">
               {socialLinks.map(({ label, href, Icon }) => (
                 <a
@@ -139,7 +142,7 @@ export default function Footer() {
       {/* Podfooter */}
       <div className="mt-14 border-t border-ink-line py-6 sm:mt-16">
         <p className="px-4 text-center text-xs text-white/45 sm:text-sm">
-          © {new Date().getFullYear()} • Restoran Savić • Sva prava zadržana.
+          © {new Date().getFullYear()} • {t("Restoran Savić • Sva prava zadržana.", "Restaurant Savić • All rights reserved.")}
         </p>
       </div>
     </footer>

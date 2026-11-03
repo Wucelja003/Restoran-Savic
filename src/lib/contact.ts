@@ -3,12 +3,12 @@
 // TODO: potvrditi email sa vlasnikom
 export const contact = {
   street: "Radnička 5a",
-  city: "11000 Beograd",
+  city: { sr: "11000 Beograd", en: "11000 Belgrade, Serbia" },
   phone: "+381 63 316 777",
   // Broj na koji stižu rezervacije preko WhatsApp-a (može biti isti kao telefon)
   whatsapp: "+381 63 316 777",
   email: "restoransavic@gmail.com",
-  hours: [{ days: "Svakog dana", time: "09:00 – 23:00" }],
+  hours: [{ days: { sr: "Svakog dana", en: "Every day" }, time: "09:00 – 23:00" }],
 }
 
 // TODO: pravi linkovi ka društvenim mrežama

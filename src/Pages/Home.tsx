@@ -11,6 +11,7 @@ import ReservationOptions from "../components/ReservationOptions"
 import Location from "../components/Location"
 import { ease, useEnterDelay } from "../lib/motion"
 import { contact, phoneHref } from "../lib/contact"
+import { useLang, useT } from "../i18n/lang"
 import heroImg from "../assets/images/restoran-4.jpg"
 
 const heroItem: Variants = {
@@ -19,6 +20,8 @@ const heroItem: Variants = {
 }
 
 export default function Home() {
+  const t = useT()
+  const { lang } = useLang()
   const enterDelay = useEnterDelay()
   const heroStagger: Variants = {
     hidden: {},
@@ -38,7 +41,7 @@ export default function Home() {
         >
           <img
             src={heroImg}
-            alt="Sala restorana Savić"
+            alt={t("Sala restorana Savić", "The dining room at Restaurant Savić")}
             className="h-full w-full animate-hero-zoom object-cover motion-reduce:animate-none"
           />
         </motion.div>
@@ -61,12 +64,12 @@ export default function Home() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
             </span>
-            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">100 godina tradicije</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.3em] text-gold">{t("100 godina tradicije", "100 years of tradition")}</span>
           </motion.div>
 
           <motion.h1 variants={heroItem} className="mt-8 leading-none">
             <span className="block font-serif text-3xl font-normal tracking-[0.2em] text-white/90 uppercase sm:text-4xl">
-              Restoran
+              {t("Restoran", "Restaurant")}
             </span>
             <span className="mt-2 block bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text pb-3 text-7xl text-transparent sm:text-8xl lg:text-9xl">
               Savić
@@ -80,7 +83,10 @@ export default function Home() {
 
           {/* TODO: proveriti tekst sa vlasnikom */}
           <motion.p variants={heroItem} className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/75 sm:text-xl">
-            Pečenje i jela iz domaće kuhinje, pripremljena po porodičnim receptima - posluženi s pažnjom, u toplini koju pamtite.
+            {t(
+              "Pečenje i jela iz domaće kuhinje, pripremljena po porodičnim receptima - posluženi s pažnjom, u toplini koju pamtite.",
+              "Spit roasts and home-style Serbian cooking, made from family recipes and served with care, in a warmth you will remember.",
+            )}
           </motion.p>
 
           <motion.div variants={heroItem} className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -88,7 +94,7 @@ export default function Home() {
               to="/rezervacija"
               className="btn-flow group relative inline-flex items-center gap-3 overflow-hidden rounded-full py-2 pl-7 pr-2 text-xs font-semibold uppercase tracking-[0.18em]"
             >
-              Rezerviši sto
+              {t("Rezerviši sto", "Book a table")}
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-gold">
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
               </span>
@@ -97,7 +103,7 @@ export default function Home() {
               to="/meni"
               className="inline-flex items-center rounded-full border border-white/25 bg-ink/30 px-8 py-[1.05rem] text-xs font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-md transition-colors duration-300 hover:border-gold hover:text-gold"
             >
-              Pogledaj meni
+              {t("Pogledaj meni", "View the menu")}
             </Link>
           </motion.div>
 
@@ -109,7 +115,7 @@ export default function Home() {
                 <Phone className="h-4 w-4" />
               </span>
               <span className="text-left">
-                <span className="block text-[10px] uppercase tracking-[0.25em] text-white/50">Pozovite nas</span>
+                <span className="block text-[10px] uppercase tracking-[0.25em] text-white/50">{t("Pozovite nas", "Call us")}</span>
                 <span className="block font-serif text-xl text-white transition-colors group-hover:text-gold">{contact.phone}</span>
               </span>
             </a>
@@ -125,18 +131,18 @@ export default function Home() {
         >
           <p className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-gold" />
-            {contact.street}, {contact.city}
+            {contact.street}, {contact.city[lang]}
           </p>
           {/* Samo na visokim ekranima – na nižim bi se preklopilo sa dugmetom za poziv */}
           <span className="hidden flex-col items-center gap-3 text-[10px] uppercase tracking-[0.3em] [@media(min-height:900px)]:flex">
-            Skrolujte
+            {t("Skrolujte", "Scroll")}
             <span className="relative h-10 w-px overflow-hidden bg-white/15">
               <span className="absolute inset-x-0 top-0 h-1/2 animate-[scroll-hint_2s_ease-in-out_infinite] bg-gold" />
             </span>
           </span>
           <p className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-gold" />
-            {contact.hours[0].days}: {contact.hours[0].time}
+            {contact.hours[0].days[lang]}: {contact.hours[0].time}
           </p>
         </motion.div>
       </section>

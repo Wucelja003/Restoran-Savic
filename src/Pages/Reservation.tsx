@@ -10,9 +10,23 @@ import { contact, phoneHref, whatsappHref } from "../lib/contact"
 import WhatsAppIcon from "../components/WhatsAppIcon"
 import { services, type Service, type ServiceId } from "../lib/reservations"
 import headerImg from "../assets/images/restoran-5.jpg"
+import { useLang, useT } from "../i18n/lang"
 
-const celebrationTypes = ["Rođendan", "Slava", "Venčanje", "Krštenje", "Poslovna proslava", "Drugo"]
-const cateringTypes = ["Porodično okupljanje", "Slava", "Poslovni događaj", "Proslava", "Drugo"]
+const celebrationTypes = [
+  { sr: "Rođendan", en: "Birthday" },
+  { sr: "Slava", en: "Slava (family feast day)" },
+  { sr: "Venčanje", en: "Wedding" },
+  { sr: "Krštenje", en: "Christening" },
+  { sr: "Poslovna proslava", en: "Corporate event" },
+  { sr: "Drugo", en: "Other" },
+]
+const cateringTypes = [
+  { sr: "Porodično okupljanje", en: "Family gathering" },
+  { sr: "Slava", en: "Slava (family feast day)" },
+  { sr: "Poslovni događaj", en: "Business event" },
+  { sr: "Proslava", en: "Celebration" },
+  { sr: "Drugo", en: "Other" },
+]
 
 const emptyForm = {
   name: "",
@@ -20,7 +34,8 @@ const emptyForm = {
   date: "",
   time: "",
   guests: 2,
-  eventType: "",
+  // indeks u celebrationTypes / cateringTypes (-1 = nije izabrano) – da izbor ostane i pri promeni jezika
+  eventType: -1,
   address: "",
   note: "",
 }
@@ -29,8 +44,12 @@ function ReservationForm({ service }: { service: Service }) {
   const [form, setForm] = useState({
     ...emptyForm,
     guests: service.id === "sto" ? 2 : 30,
-    eventType: service.id === "proslave" ? celebrationTypes[0] : service.id === "ketering" ? cateringTypes[0] : "",
+    eventType: service.id === "sto" ? -1 : 0,
   })
+  const t = useT()
+  const { lang } = useLang()
+  const eventTypes = (service.id === "ketering" ? cateringTypes : celebrationTypes).map((x) => x[lang])
+  const eventType = eventTypes[form.eventType] ?? ""
   const [sentLink, setSentLink] = useState<string | null>(null)
   const [errors, setErrors] = useState({ date: false, time: false })
   const set = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => setForm((f) => ({ ...f, [key]: value }))
@@ -44,22 +63,22 @@ function ReservationForm({ service }: { service: Service }) {
     if (missing.date || missing.time) return
 
     const [y, m, d] = form.date.split("-").map(Number)
-    const date = new Intl.DateTimeFormat("sr-Latn", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(
+    const date = new Intl.DateTimeFormat(lang === "en" ? "en-GB" : "sr-Latn", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(
       new Date(y, m - 1, d),
     )
     const lines = [
-      `*Nova rezervacija – ${service.title}*`,
+      `*${t("Nova rezervacija", "New booking")} – ${service.title[lang]}*`,
       "",
-      form.eventType ? `🎉 Vrsta: ${form.eventType}` : null,
-      `👤 Ime i prezime: ${form.name}`,
-      `📞 Telefon: ${form.phone}`,
-      `📅 Datum: ${date}`,
-      form.time ? `🕗 Vreme: ${form.time}` : null,
-      `👥 Broj ${service.id === "sto" ? "osoba" : "gostiju"}: ${form.guests}`,
-      form.address ? `📍 Adresa: ${form.address}` : null,
-      form.note ? `📝 Napomena: ${form.note}` : null,
+      eventType ? `🎉 ${t("Vrsta", "Occasion")}: ${eventType}` : null,
+      `👤 ${t("Ime i prezime", "Name")}: ${form.name}`,
+      `📞 ${t("Telefon", "Phone")}: ${form.phone}`,
+      `📅 ${t("Datum", "Date")}: ${date}`,
+      form.time ? `🕗 ${t("Vreme", "Time")}: ${form.time}` : null,
+      `👥 ${service.id === "sto" ? t("Broj osoba", "Party size") : t("Broj gostiju", "Number of guests")}: ${form.guests}`,
+      form.address ? `📍 ${t("Adresa", "Address")}: ${form.address}` : null,
+      form.note ? `📝 ${t("Napomena", "Notes")}: ${form.note}` : null,
       "",
-      "Poslato sa sajta restoran-savic.vercel.app",
+      t("Poslato sa sajta restoran-savic.vercel.app", "Sent from restoran-savic.vercel.app"),
     ].filter((l): l is string => l !== null)
 
     const link = whatsappHref(lines.join("\n"))
@@ -80,10 +99,11 @@ function ReservationForm({ service }: { service: Service }) {
         <span className="flex h-20 w-20 items-center justify-center rounded-full border border-gold/50 bg-gold/10 text-gold">
           <Check className="h-9 w-9" />
         </span>
-        <h3 className="mt-6 text-3xl">Još samo jedan korak</h3>
+        <h3 className="mt-6 text-3xl">{t("Još samo jedan korak", "Just one more step")}</h3>
         <p className="mt-3 max-w-sm text-white/60">
-          Otvorili smo WhatsApp sa vašom porukom – samo pritisnite <span className="text-white">Pošalji</span>. Javićemo vam
-          se što pre da potvrdimo.
+          {t("Otvorili smo WhatsApp sa vašom porukom – samo pritisnite", "We have opened WhatsApp with your message – just tap")}{" "}
+          <span className="text-white">{t("Pošalji", "Send")}</span>
+          {t(". Javićemo vam se što pre da potvrdimo.", ". We will get back to you shortly to confirm.")}
         </p>
         <a
           href={sentLink}
@@ -92,9 +112,9 @@ function ReservationForm({ service }: { service: Service }) {
           className="mt-8 inline-flex items-center gap-2 rounded-full border border-gold/50 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-ink"
         >
           <WhatsAppIcon className="h-4 w-4" />
-          Otvori WhatsApp ponovo
+          {t("Otvori WhatsApp ponovo", "Open WhatsApp again")}
         </a>
-        <p className="mt-6 text-sm text-white/45">Nemate WhatsApp? Pozovite nas:</p>
+        <p className="mt-6 text-sm text-white/45">{t("Nemate WhatsApp? Pozovite nas:", "No WhatsApp? Give us a call:")}</p>
         <a href={phoneHref} className="mt-2 inline-flex items-center gap-2 font-serif text-2xl text-gold hover:underline">
           <Phone className="h-5 w-5" />
           {contact.phone}
@@ -104,37 +124,38 @@ function ReservationForm({ service }: { service: Service }) {
           onClick={() => setSentLink(null)}
           className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-white/50 transition-colors hover:text-gold"
         >
-          ← Nazad na formu
+          ← {t("Nazad na formu", "Back to the form")}
         </button>
       </motion.div>
     )
   }
 
-  const guestsLabel = service.id === "sto" ? "Broj osoba" : service.id === "proslave" ? "Okvirni broj gostiju" : "Broj osoba"
+  const guestsLabel =
+    service.id === "proslave" ? t("Okvirni broj gostiju", "Approximate number of guests") : t("Broj osoba", "Number of guests")
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
       {service.id === "proslave" && (
-        <Field label="Vrsta proslave" group>
-          <Chips options={celebrationTypes} value={form.eventType} onChange={(v) => set("eventType", v)} />
+        <Field label={t("Vrsta proslave", "Type of celebration")} group>
+          <Chips options={eventTypes} value={eventType} onChange={(v) => set("eventType", eventTypes.indexOf(v))} />
         </Field>
       )}
       {service.id === "ketering" && (
-        <Field label="Vrsta događaja" group>
-          <Chips options={cateringTypes} value={form.eventType} onChange={(v) => set("eventType", v)} />
+        <Field label={t("Vrsta događaja", "Type of event")} group>
+          <Chips options={eventTypes} value={eventType} onChange={(v) => set("eventType", eventTypes.indexOf(v))} />
         </Field>
       )}
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Ime i prezime" required>
-          <Input required autoComplete="name" placeholder="Petar Petrović" value={form.name} onChange={(e) => set("name", e.target.value)} />
+        <Field label={t("Ime i prezime", "Full name")} required>
+          <Input required autoComplete="name" placeholder={t("Petar Petrović", "John Smith")} value={form.name} onChange={(e) => set("name", e.target.value)} />
         </Field>
-        <Field label="Telefon" required>
+        <Field label={t("Telefon", "Phone")} required>
           <Input
             required
             type="tel"
             autoComplete="tel"
-            placeholder="06x xxx xxxx"
+            placeholder={t("06x xxx xxxx", "+381 6x xxx xxxx")}
             pattern="[0-9+ /()-]{6,}"
             value={form.phone}
             onChange={(e) => set("phone", e.target.value)}
@@ -144,7 +165,7 @@ function ReservationForm({ service }: { service: Service }) {
 
       {service.id === "sto" ? (
         <>
-          <Field label="Datum" required group>
+          <Field label={t("Datum", "Date")} required group>
             <DatePicker
               value={form.date}
               invalid={errors.date}
@@ -154,9 +175,9 @@ function ReservationForm({ service }: { service: Service }) {
                 setErrors((er) => ({ ...er, date: false }))
               }}
             />
-            {errors.date && <p className="mt-2 text-xs text-red-300">Izaberite datum.</p>}
+            {errors.date && <p className="mt-2 text-xs text-red-300">{t("Izaberite datum.", "Please choose a date.")}</p>}
           </Field>
-          <Field label="Vreme" required group>
+          <Field label={t("Vreme", "Time")} required group>
             <TimeSlots
               value={form.time}
               date={form.date}
@@ -166,15 +187,15 @@ function ReservationForm({ service }: { service: Service }) {
                 setErrors((er) => ({ ...er, time: false }))
               }}
             />
-            {errors.time && <p className="mt-2 text-xs text-red-300">Izaberite vreme.</p>}
+            {errors.time && <p className="mt-2 text-xs text-red-300">{t("Izaberite vreme.", "Please choose a time.")}</p>}
           </Field>
           <Field label={guestsLabel} group>
-            <Stepper value={form.guests} onChange={(v) => set("guests", v)} max={50} suffix="osoba" />
+            <Stepper value={form.guests} onChange={(v) => set("guests", v)} max={50} suffix={t("osoba", "guests")} />
           </Field>
         </>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2">
-          <Field label="Datum" required group>
+          <Field label={t("Datum", "Date")} required group>
             <DatePicker
               value={form.date}
               invalid={errors.date}
@@ -183,7 +204,7 @@ function ReservationForm({ service }: { service: Service }) {
                 setErrors((er) => ({ ...er, date: false }))
               }}
             />
-            {errors.date && <p className="mt-2 text-xs text-red-300">Izaberite datum.</p>}
+            {errors.date && <p className="mt-2 text-xs text-red-300">{t("Izaberite datum.", "Please choose a date.")}</p>}
           </Field>
           <Field label={guestsLabel} group>
             <Stepper value={form.guests} onChange={(v) => set("guests", v)} max={500} />
@@ -192,17 +213,17 @@ function ReservationForm({ service }: { service: Service }) {
       )}
 
       {service.id === "ketering" && (
-        <Field label="Adresa događaja" required>
-          <Input required autoComplete="street-address" placeholder="Ulica i broj, grad" value={form.address} onChange={(e) => set("address", e.target.value)} />
+        <Field label={t("Adresa događaja", "Event address")} required>
+          <Input required autoComplete="street-address" placeholder={t("Ulica i broj, grad", "Street address, city")} value={form.address} onChange={(e) => set("address", e.target.value)} />
         </Field>
       )}
 
-      <Field label={service.id === "sto" ? "Napomena" : "Vaše želje"}>
+      <Field label={service.id === "sto" ? t("Napomena", "Notes") : t("Vaše želje", "Your requests")}>
         <Textarea
           placeholder={
             service.id === "sto"
-              ? "Npr. rođendan, dečja stolica, sto pored prozora…"
-              : "Npr. meni, pečenje, dekoracija, posebni zahtevi…"
+              ? t("Npr. rođendan, dečja stolica, sto pored prozora…", "E.g. a birthday, a high chair, a table by the window…")
+              : t("Npr. meni, pečenje, dekoracija, posebni zahtevi…", "E.g. the menu, roasts, decorations, special requests…")
           }
           value={form.note}
           onChange={(e) => set("note", e.target.value)}
@@ -214,10 +235,11 @@ function ReservationForm({ service }: { service: Service }) {
         className="btn-flow group relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full py-4 text-sm font-semibold uppercase tracking-[0.18em]"
       >
         <WhatsAppIcon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
-        Pošalji preko WhatsApp-a
+        {t("Pošalji preko WhatsApp-a", "Send via WhatsApp")}
       </button>
       <p className="text-center text-xs text-white/40">
-        Polja sa <span className="text-gold">*</span> su obavezna. Klikom se otvara WhatsApp sa popunjenom porukom.
+        {t("Polja sa", "Fields marked")} <span className="text-gold">*</span>{" "}
+        {t("su obavezna. Klikom se otvara WhatsApp sa popunjenom porukom.", "are required. Clicking opens WhatsApp with your message ready to send.")}
       </p>
     </form>
   )
@@ -228,27 +250,29 @@ export default function Reservation() {
   const initial = services.find((s) => `#${s.id}` === hash)?.id ?? "sto"
   const [active, setActive] = useState<ServiceId>(initial)
   const service = services.find((s) => s.id === active)!
+  const t = useT()
+  const { lang } = useLang()
 
   return (
     <>
-      <PageHeader eyebrow="Očekujemo vas" title="Rezervacija" image={headerImg} />
+      <PageHeader eyebrow={t("Očekujemo vas", "We look forward to seeing you")} title={t("Rezervacija", "Reservations")} image={headerImg} />
 
       <section className="relative py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <Reveal className="text-center">
             <div className="flex items-center justify-center gap-4">
               <span className="streak-x hidden sm:block" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Naša ponuda</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Naša ponuda", "What we offer")}</span>
               <span className="streak-x hidden sm:block" />
             </div>
             <h2 className="mt-6 text-4xl sm:text-5xl">
-              Kako možemo da vam{" "}
-              <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">pomognemo?</span>
+              {t("Kako možemo da vam", "How can we")}{" "}
+              <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">{t("pomognemo?", "help you?")}</span>
             </h2>
           </Reveal>
 
           {/* Izbor usluge */}
-          <div className="mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4" role="tablist" aria-label="Vrsta rezervacije">
+          <div className="mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4" role="tablist" aria-label={t("Vrsta rezervacije", "Type of booking")}>
             {services.map((s, i) => {
               const Icon = s.icon
               const isActive = s.id === active
@@ -282,8 +306,8 @@ export default function Reservation() {
                         0{i + 1}
                       </span>
                     </span>
-                    <span className="relative mt-4 block font-serif text-xl text-white sm:mt-6 sm:text-2xl">{s.title}</span>
-                    <span className="relative mt-2 hidden text-sm leading-relaxed text-white/55 sm:block">{s.short}</span>
+                    <span className="relative mt-4 block font-serif text-xl text-white sm:mt-6 sm:text-2xl">{s.title[lang]}</span>
+                    <span className="relative mt-2 hidden text-sm leading-relaxed text-white/55 sm:block">{s.short[lang]}</span>
                   </button>
                 </Reveal>
               )
@@ -305,18 +329,18 @@ export default function Reservation() {
                 {/* Levo – opis */}
                 <div>
                   <div className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-white/10">
-                    <img src={service.image} alt={service.title} className="h-full w-full object-cover" />
+                    <img src={service.image} alt={service.title[lang]} className="h-full w-full object-cover" />
                     <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
-                    <p className="absolute bottom-5 left-6 font-serif text-3xl text-white">{service.heading}</p>
+                    <p className="absolute bottom-5 left-6 font-serif text-3xl text-white">{service.heading[lang]}</p>
                   </div>
-                  <p className="mt-8 leading-relaxed text-white/65">{service.description}</p>
+                  <p className="mt-8 leading-relaxed text-white/65">{service.description[lang]}</p>
                   <ul className="mt-6 space-y-3">
                     {service.features.map((f) => (
-                      <li key={f} className="flex items-start gap-3 text-white/80">
+                      <li key={f.sr} className="flex items-start gap-3 text-white/80">
                         <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold">
                           <Check className="h-3.5 w-3.5" />
                         </span>
-                        {f}
+                        {f[lang]}
                       </li>
                     ))}
                   </ul>
@@ -325,7 +349,7 @@ export default function Reservation() {
                       <Phone className="h-5 w-5" />
                     </span>
                     <div>
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-white/45">Radije telefonom?</p>
+                      <p className="text-[11px] uppercase tracking-[0.2em] text-white/45">{t("Radije telefonom?", "Prefer to call?")}</p>
                       <a href={phoneHref} className="font-serif text-xl text-white transition-colors hover:text-gold">
                         {contact.phone}
                       </a>
@@ -335,8 +359,8 @@ export default function Reservation() {
 
                 {/* Desno – forma */}
                 <div className="rounded-[2rem] border border-white/10 bg-ink-soft/80 p-6 shadow-[0_40px_80px_rgba(0,0,0,0.5)] backdrop-blur sm:p-10">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">{service.title}</p>
-                  <h3 className="mt-2 text-3xl">Pošaljite zahtev</h3>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-gold">{service.title[lang]}</p>
+                  <h3 className="mt-2 text-3xl">{t("Pošaljite zahtev", "Send a request")}</h3>
                   <div className="mt-8">
                     <ReservationForm key={service.id} service={service} />
                   </div>

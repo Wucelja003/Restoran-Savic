@@ -8,6 +8,7 @@ import Reveal from "../components/Reveal"
 import SkewedCarousel from "../components/SkewedCarousel"
 import ReservationOptions from "../components/ReservationOptions"
 import { ease } from "../lib/motion"
+import { useLang, useT } from "../i18n/lang"
 import headerImg from "../assets/galerija/ambijent/ambijent-02.jpg"
 import jelo04 from "../assets/galerija/jela/jelo-04.jpg"
 import jelo05 from "../assets/galerija/jela/jelo-05.jpg"
@@ -34,17 +35,17 @@ const ambienceImages = glob(
 // Jela u karuselu – svaka slika ide zajedno sa svojim nazivom, pa promena naziva ne pomera slike.
 // Da dodaš jelo: ubaci sliku u src/assets/galerija/jela/, uvezi je gore i dodaj red ovde.
 const dishes = [
-  { src: jelo04, title: "Domaće pečenje" },
-  { src: jelo05, title: "Gurmanska pljeskavica" },
-  { src: jelo06, title: "Karađorđeva šnicla" },
-  { src: cevapi, title: "Ćevapi zapečeni u sosu od ajvara" },
-  { src: lignje, title: "Lignje" },
-  { src: losos, title: "Losos" },
-  { src: pecurke, title: "Pečurke na žaru" },
-  { src: jelo08, title: "Pita sa suvim šljivama" },
-  { src: jelo09, title: "Pita sa jabukama" },
-  { src: jelo11, title: "Palačinke u vinskom šatou" },
-  { src: jelo10, title: "Domaća rakija" },
+  { src: jelo04, title: { sr: "Domaće pečenje", en: "Traditional Roast" } },
+  { src: jelo05, title: { sr: "Gurmanska pljeskavica", en: "Gourmet Pljeskavica – stuffed Serbian patty" } },
+  { src: jelo06, title: { sr: "Karađorđeva šnicla", en: "Karađorđe Schnitzel" } },
+  { src: cevapi, title: { sr: "Ćevapi zapečeni u sosu od ajvara", en: "Ćevapi Baked in Ajvar Sauce" } },
+  { src: lignje, title: { sr: "Lignje", en: "Squid" } },
+  { src: losos, title: { sr: "Losos", en: "Salmon" } },
+  { src: pecurke, title: { sr: "Pečurke na žaru", en: "Grilled Mushrooms" } },
+  { src: jelo08, title: { sr: "Pita sa suvim šljivama", en: "Prune Pie" } },
+  { src: jelo09, title: { sr: "Pita sa jabukama", en: "Apple Pie" } },
+  { src: jelo11, title: { sr: "Palačinke u vinskom šatou", en: "Crêpes in Wine Chaudeau" } },
+  { src: jelo10, title: { sr: "Domaća rakija", en: "Homemade Rakija" } },
 ]
 
 // Širina kartice u karuselu zavisi od ekrana
@@ -62,6 +63,7 @@ function useCardWidth() {
 /* Pregled slike preko celog ekrana, sa listanjem */
 function Lightbox({ index, onClose, onStep }: { index: number; onClose: () => void; onStep: (d: number) => void }) {
   const lenis = useLenis()
+  const t = useT()
 
   useEffect(() => {
     lenis?.stop()
@@ -90,13 +92,13 @@ function Lightbox({ index, onClose, onStep }: { index: number; onClose: () => vo
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Pregled slike"
+      aria-label={t("Pregled slike", "Image viewer")}
       data-lenis-prevent
     >
       <button
         type="button"
         onClick={onClose}
-        aria-label="Zatvori"
+        aria-label={t("Zatvori", "Close")}
         className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-gold hover:text-gold sm:right-8 sm:top-8"
       >
         <X className="h-6 w-6" />
@@ -104,7 +106,7 @@ function Lightbox({ index, onClose, onStep }: { index: number; onClose: () => vo
 
       <button
         type="button"
-        aria-label="Prethodna"
+        aria-label={t("Prethodna", "Previous")}
         className={`${nav} left-3 sm:left-8`}
         onClick={(e) => {
           e.stopPropagation()
@@ -115,7 +117,7 @@ function Lightbox({ index, onClose, onStep }: { index: number; onClose: () => vo
       </button>
       <button
         type="button"
-        aria-label="Sledeća"
+        aria-label={t("Sledeća", "Next")}
         className={`${nav} right-3 sm:right-8`}
         onClick={(e) => {
           e.stopPropagation()
@@ -129,7 +131,7 @@ function Lightbox({ index, onClose, onStep }: { index: number; onClose: () => vo
         <motion.img
           key={index}
           src={ambienceImages[index]}
-          alt="Ambijent restorana Savić"
+          alt={t("Ambijent restorana Savić", "Inside Restaurant Savić")}
           onClick={(e) => e.stopPropagation()}
           className="max-h-[85svh] max-w-full rounded-2xl border border-gold/20 object-contain shadow-[0_0_80px_rgba(238,191,28,0.12)]"
           initial={{ opacity: 0, scale: 0.96 }}
@@ -149,6 +151,8 @@ function Lightbox({ index, onClose, onStep }: { index: number; onClose: () => vo
 
 export default function Gallery() {
   const cardWidth = useCardWidth()
+  const t = useT()
+  const { lang } = useLang()
   const [open, setOpen] = useState<number | null>(null)
   const close = useCallback(() => setOpen(null), [])
   const step = useCallback(
@@ -158,7 +162,7 @@ export default function Gallery() {
 
   return (
     <>
-      <PageHeader eyebrow="Iz naše kuhinje i sale" title="Galerija" image={headerImg} />
+      <PageHeader eyebrow={t("Iz naše kuhinje i sale", "From our kitchen and dining room")} title={t("Galerija", "Gallery")} image={headerImg} />
 
       {/* Jela – iskošeni 3D karusel */}
       <section className="relative overflow-hidden py-24 sm:py-32">
@@ -166,19 +170,19 @@ export default function Gallery() {
         <Reveal className="relative mx-auto max-w-2xl px-4 text-center">
           <div className="flex items-center justify-center gap-4">
             <span className="streak-x hidden sm:block" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Iz naše kuhinje</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Iz naše kuhinje", "From our kitchen")}</span>
             <span className="streak-x hidden sm:block" />
           </div>
           <h2 className="mt-6 text-4xl sm:text-5xl">
-            Naša{" "}
-            <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">jela</span>
+            {t("Naša", "Our")}{" "}
+            <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">{t("jela", "dishes")}</span>
           </h2>
-          <p className="mt-5 text-white/55">Prevucite, kliknite na sliku ili koristite strelice.</p>
+          <p className="mt-5 text-white/55">{t("Prevucite, kliknite na sliku ili koristite strelice.", "Swipe, tap an image or use the arrows.")}</p>
         </Reveal>
 
         <Reveal delay={0.15} className="relative mt-16">
           <SkewedCarousel
-            items={dishes}
+            items={dishes.map((d) => ({ src: d.src, title: d.title[lang] }))}
             initialIndex={1}
             cardWidth={cardWidth}
             aspectRatio="3 / 4"
@@ -197,12 +201,12 @@ export default function Gallery() {
           <Reveal className="mx-auto max-w-2xl text-center">
             <div className="flex items-center justify-center gap-4">
               <span className="streak-x hidden sm:block" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Ambijent</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Ambijent", "Ambience")}</span>
               <span className="streak-x hidden sm:block" />
             </div>
             <h2 className="mt-6 text-4xl sm:text-5xl">
-              Naša{" "}
-              <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">sala</span>
+              {t("Naša", "Our")}{" "}
+              <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">{t("sala", "dining room")}</span>
             </h2>
           </Reveal>
 
@@ -212,14 +216,14 @@ export default function Gallery() {
                 <button
                   type="button"
                   onClick={() => setOpen(i)}
-                  aria-label={`Otvori sliku ${i + 1}`}
+                  aria-label={`${t("Otvori sliku", "Open image")} ${i + 1}`}
                   className={`group relative block w-full overflow-hidden rounded-[1.25rem] border border-white/10 transition-colors duration-500 hover:border-gold/40 ${
                     i % 3 === 1 ? "aspect-[3/4]" : "aspect-[4/5]"
                   }`}
                 >
                   <img
                     src={src}
-                    alt="Ambijent restorana Savić"
+                    alt={t("Ambijent restorana Savić", "Inside Restaurant Savić")}
                     loading="lazy"
                     className="h-full w-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
                   />

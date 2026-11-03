@@ -2,15 +2,16 @@ import { useEffect, useRef, useState } from "react"
 import { AnimatePresence, motion } from "motion/react"
 import { Check, ChevronDown, Languages } from "lucide-react"
 
-// TODO: povezati sa pravim prevodom (npr. i18next) – zasad se samo pamti izbor
-const languages = [
+import { useLang, type Lang } from "../i18n/lang"
+
+const languages: { code: Lang; label: string }[] = [
   { code: "sr", label: "Srpski" },
   { code: "en", label: "English" },
 ]
 
 export default function LanguageSwitcher() {
   const [open, setOpen] = useState(false)
-  const [current, setCurrent] = useState("sr")
+  const { lang: current, setLang: setCurrent } = useLang()
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -65,7 +66,7 @@ export default function LanguageSwitcher() {
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
-        aria-label="Promeni jezik"
+        aria-label={current === "en" ? "Change language" : "Promeni jezik"}
         className="flex h-11 items-center gap-1.5 rounded-full border border-gold/40 px-3.5 text-gold transition-colors duration-300 hover:border-gold hover:bg-gold/10"
       >
         <Languages className="h-4 w-4" />

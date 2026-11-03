@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from "react"
 import { motion, type PanInfo, type Transition } from "motion/react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useT } from "../i18n/lang"
 
 export interface SkewedCarouselItem {
   /** Image source */
@@ -155,34 +156,38 @@ interface RailProps {
   onPick: (index: number) => void
 }
 
-const Rail = ({ items, current, token, transition, onPick }: RailProps) => (
-  <div className="flex w-44 items-center gap-1.5 sm:w-64">
-    {items.map((item, index) => (
-      <button
-        key={`rail-${item.src}-${index}`}
-        type="button"
-        onClick={() => onPick(index)}
-        aria-label={`Prikaži: ${item.title}`}
-        aria-current={index === current}
-        className="relative h-0.5 flex-1 cursor-pointer rounded-full bg-white/15 transition-colors duration-200 before:absolute before:inset-x-0 before:-inset-y-2.5 before:content-[''] hover:bg-white/40"
-      >
-        {index === current && (
-          <motion.span layoutId={token} className="absolute inset-0 rounded-full bg-gold" transition={transition} />
-        )}
-      </button>
-    ))}
-  </div>
-)
+const Rail = ({ items, current, token, transition, onPick }: RailProps) => {
+  const t = useT()
+  return (
+    <div className="flex w-44 items-center gap-1.5 sm:w-64">
+      {items.map((item, index) => (
+        <button
+          key={`rail-${item.src}-${index}`}
+          type="button"
+          onClick={() => onPick(index)}
+          aria-label={`${t("Prikaži", "Show")}: ${item.title}`}
+          aria-current={index === current}
+          className="relative h-0.5 flex-1 cursor-pointer rounded-full bg-white/15 transition-colors duration-200 before:absolute before:inset-x-0 before:-inset-y-2.5 before:content-[''] hover:bg-white/40"
+        >
+          {index === current && (
+            <motion.span layoutId={token} className="absolute inset-0 rounded-full bg-gold" transition={transition} />
+          )}
+        </button>
+      ))}
+    </div>
+  )
+}
 
 const Arrow = ({ side, disabled, onPress }: { side: "prev" | "next"; disabled: boolean; onPress: () => void }) => {
   const Glyph = side === "prev" ? ChevronLeft : ChevronRight
+  const t = useT()
 
   return (
     <button
       type="button"
       onClick={onPress}
       disabled={disabled}
-      aria-label={side === "prev" ? "Prethodno" : "Sledeće"}
+      aria-label={side === "prev" ? t("Prethodno", "Previous") : t("Sledeće", "Next")}
       className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-gold/40 text-gold transition-colors duration-200 hover:bg-gold hover:text-ink disabled:pointer-events-none disabled:opacity-20"
     >
       <Glyph size={18} strokeWidth={2.25} />
@@ -214,6 +219,7 @@ const SkewedCarousel: React.FC<SkewedCarouselProps> = ({
 }) => {
   const count = items.length
   const token = useId()
+  const t = useT()
   const [focused, setFocused] = useState(() => settle(initialIndex, count, false))
   const report = useRef(onIndexChange)
 
@@ -269,7 +275,7 @@ const SkewedCarousel: React.FC<SkewedCarouselProps> = ({
       tabIndex={0}
       role="group"
       aria-roledescription="carousel"
-      aria-label="Galerija jela"
+      aria-label={t("Galerija jela", "Dish gallery")}
       onKeyDown={onKeyDown}
       className={`relative flex w-full select-none flex-col items-center overflow-hidden text-white outline-none ${className}`}
     >

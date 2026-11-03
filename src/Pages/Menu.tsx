@@ -7,14 +7,17 @@ import { menuCategories } from "../lib/menu"
 import { menuIcons } from "../lib/menuIcons"
 import { menuItems } from "../lib/menuItems"
 import headerImg from "../assets/images/cevapi-2.jpg"
+import { useLang, useT } from "../i18n/lang"
 
 const MotionLink = motion.create(Link)
 
 // Pregled jelovnika – svaka kategorija vodi na svoju stranicu (/meni/predjela …)
 export default function Menu() {
+  const t = useT()
+  const { lang } = useLang()
   return (
     <>
-      <PageHeader eyebrow="Naša ponuda" title="Meni" image={headerImg} />
+      <PageHeader eyebrow={t("Naša ponuda", "Our offer")} title={t("Meni", "Menu")} image={headerImg} />
 
       <div className="mx-auto max-w-6xl space-y-5 px-4 py-20 sm:px-6 sm:py-28">
         {menuCategories.map((cat, i) => {
@@ -42,10 +45,10 @@ export default function Menu() {
                 <div>
                   <span className="flex items-center gap-3 text-xs uppercase tracking-[0.25em] text-gold">
                     <Icon className="h-4 w-4" />
-                    {String(i + 1).padStart(2, "0")} · {count} stavki
+                    {String(i + 1).padStart(2, "0")} · {count} {t("stavki", "items")}
                   </span>
-                  <h2 className="mt-3 text-4xl tracking-[0.08em] uppercase sm:text-6xl">{cat.name}</h2>
-                  <p className="mt-2 hidden max-w-md text-white/65 sm:block">{cat.tagline}</p>
+                  <h2 className="mt-3 text-4xl tracking-[0.08em] uppercase sm:text-6xl">{cat.name[lang]}</h2>
+                  <p className="mt-2 hidden max-w-md text-white/65 sm:block">{cat.tagline[lang]}</p>
                 </div>
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-gold/50 text-gold transition-colors duration-300 group-hover:bg-gold group-hover:text-ink sm:h-14 sm:w-14">
                   <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -57,7 +60,7 @@ export default function Menu() {
 
         <div className="!mt-12 flex items-start justify-center gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-5 text-center text-sm text-white/55 sm:items-center">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-gold sm:mt-0" />
-          <p>Sve cene su izražene u dinarima. Za alergene pitajte konobara.</p>
+          <p>{t("Sve cene su izražene u dinarima. Za alergene pitajte konobara.", "All prices are in Serbian dinars (RSD). Please ask your server about allergens.")}</p>
         </div>
       </div>
     </>

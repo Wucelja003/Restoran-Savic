@@ -6,14 +6,17 @@ import { MotionConfig } from 'motion/react'
 import 'lenis/dist/lenis.css'
 import './index.css'
 import App from './App.tsx'
+import LanguageProvider from './i18n/LanguageProvider'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ReactLenis root options={{ lerp: 0.08 }}>
       <MotionConfig reducedMotion="user">
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <LanguageProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </LanguageProvider>
       </MotionConfig>
     </ReactLenis>
   </StrictMode>,

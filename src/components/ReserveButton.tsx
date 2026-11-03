@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { motion, useReducedMotion } from "motion/react"
 import { ArrowRight } from "lucide-react"
+import { useT } from "../i18n/lang"
 
 const MotionLink = motion.create(Link)
 
@@ -12,6 +13,7 @@ type ReserveButtonProps = {
 
 export default function ReserveButton({ className = "inline-flex", onClick }: ReserveButtonProps) {
   const reduceMotion = useReducedMotion()
+  const t = useT()
 
   return (
     <MotionLink
@@ -45,7 +47,7 @@ export default function ReserveButton({ className = "inline-flex", onClick }: Re
         />
       )}
 
-      <span className="relative">Rezerviši sto</span>
+      <span className="relative">{t("Rezerviši sto", "Book a table")}</span>
 
       <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-ink text-gold">
         <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-8" />

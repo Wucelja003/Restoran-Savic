@@ -3,6 +3,7 @@ import { ArrowUpRight, Clock, Mail, MapPin, Navigation, Phone } from "lucide-rea
 import { ease } from "../lib/motion"
 import { contact, map, phoneHref } from "../lib/contact"
 import GoldMap from "./GoldMap"
+import { useLang, useT } from "../i18n/lang"
 
 const stagger: Variants = {
   hidden: {},
@@ -29,6 +30,8 @@ function InfoRow({ icon, label, children }: { icon: React.ReactNode; label: stri
 }
 
 export default function Location() {
+  const t = useT()
+  const { lang } = useLang()
   return (
     <section className="relative overflow-x-clip border-t border-ink-line py-24 sm:py-32">
       <div className="mx-auto grid max-w-6xl items-center gap-16 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
@@ -36,37 +39,40 @@ export default function Location() {
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-15% 0px" }} variants={stagger}>
           <motion.div variants={item} className="flex items-center gap-4">
             <span className="streak-x" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Lokacija</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Lokacija", "Location")}</span>
           </motion.div>
 
           <motion.h2 variants={item} className="mt-6 text-4xl leading-tight sm:text-5xl">
-            Ovde možete da nas{" "}
+            {t("Ovde možete da nas", "Here is where you can")}{" "}
             <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">
-              pronađete
+              {t("pronađete", "find us")}
             </span>
           </motion.h2>
 
           <motion.p variants={item} className="mt-5 max-w-md leading-relaxed text-white/55">
-            Svratite na ručak, večeru ili porodično slavlje – čekamo vas sa toplim dočekom i domaćom kuhinjom.
+            {t(
+              "Svratite na ručak, večeru ili porodično slavlje – čekamo vas sa toplim dočekom i domaćom kuhinjom.",
+              "Drop by for lunch, dinner or a family celebration – a warm welcome and home-style cooking await you.",
+            )}
           </motion.p>
 
           <ul className="mt-8">
-            <InfoRow icon={<MapPin className="h-5 w-5" />} label="Adresa">
+            <InfoRow icon={<MapPin className="h-5 w-5" />} label={t("Adresa", "Address")}>
               <p>{contact.street}</p>
-              <p className="text-sm text-white/50">{contact.city}</p>
+              <p className="text-sm text-white/50">{contact.city[lang]}</p>
             </InfoRow>
 
-            <InfoRow icon={<Phone className="h-5 w-5" />} label="Telefon">
+            <InfoRow icon={<Phone className="h-5 w-5" />} label={t("Telefon", "Phone")}>
               <a href={phoneHref} className="transition-colors hover:text-gold">
                 {contact.phone}
               </a>
             </InfoRow>
 
-            <InfoRow icon={<Clock className="h-5 w-5" />} label="Radno vreme">
+            <InfoRow icon={<Clock className="h-5 w-5" />} label={t("Radno vreme", "Opening hours")}>
               <dl className="space-y-1">
                 {contact.hours.map((h) => (
-                  <div key={h.days} className="flex flex-wrap gap-x-3">
-                    <dt className="text-white/50">{h.days}</dt>
+                  <div key={h.days.sr} className="flex flex-wrap gap-x-3">
+                    <dt className="text-white/50">{h.days[lang]}</dt>
                     <dd>{h.time}</dd>
                   </div>
                 ))}
@@ -85,7 +91,7 @@ export default function Location() {
               href={phoneHref}
               className="btn-flow group relative inline-flex items-center gap-3 overflow-hidden rounded-full py-2 pl-6 pr-2 text-xs font-semibold uppercase tracking-[0.18em]"
             >
-              Pozovite nas
+              {t("Pozovite nas", "Call us")}
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-gold transition-transform duration-300 group-hover:rotate-12">
                 <Phone className="h-4 w-4" />
               </span>
@@ -96,7 +102,7 @@ export default function Location() {
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 rounded-full border border-gold/50 py-2 pl-6 pr-2 text-xs font-semibold uppercase tracking-[0.18em] text-gold transition-colors duration-300 hover:border-gold hover:bg-gold hover:text-ink"
             >
-              Uputstva do nas
+              {t("Uputstva do nas", "Get directions")}
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold text-ink transition-colors duration-300 group-hover:bg-ink group-hover:text-gold">
                 <Navigation className="h-4 w-4" />
               </span>
@@ -130,8 +136,8 @@ export default function Location() {
                   <span className="relative inline-flex h-3 w-3 rounded-full bg-gold" />
                 </span>
                 <span>
-                  <span className="block font-serif text-lg leading-tight text-white">Restoran Savić</span>
-                  <span className="block text-xs text-white/50">Otvori u Google mapama</span>
+                  <span className="block font-serif text-lg leading-tight text-white">{t("Restoran Savić", "Restaurant Savić")}</span>
+                  <span className="block text-xs text-white/50">{t("Otvori u Google mapama", "Open in Google Maps")}</span>
                 </span>
               </span>
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold text-ink">

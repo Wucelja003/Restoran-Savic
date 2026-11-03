@@ -2,6 +2,7 @@ import type { CSSProperties } from "react"
 import { Link } from "react-router-dom"
 import { ArrowRight } from "lucide-react"
 import Reveal from "./Reveal"
+import { useT } from "../i18n/lang"
 
 // Slike ambijenta (iz public/POST, smanjene) – src/assets/ambijent/ambijent-1..8.jpg
 const images = Object.values(
@@ -44,6 +45,7 @@ function Column({ start, duration, reverse, desktop }: (typeof columns)[number])
 }
 
 export default function Ambience() {
+  const t = useT()
   return (
     <section className="relative flex min-h-[640px] items-center justify-center overflow-hidden border-t border-ink-line py-28 sm:min-h-[760px]">
       {/* Pozadina: iskošen zid slika koje se same kreću – samo za gledanje, ne reaguje na miš */}
@@ -64,26 +66,29 @@ export default function Ambience() {
       <Reveal className="relative z-10 mx-auto max-w-2xl px-4 text-center">
         <div className="flex items-center justify-center gap-4">
           <span className="streak-x hidden sm:block" />
-          <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Ambijent</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Ambijent", "Ambience")}</span>
           <span className="streak-x hidden sm:block" />
         </div>
         <h2 className="mt-6 text-5xl leading-tight sm:text-6xl lg:text-7xl">
-          Topla atmosfera
+          {t("Topla atmosfera", "A warm atmosphere")}
           <br />
           <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">
-            kao nekada
+            {t("kao nekada", "like in the old days")}
           </span>
         </h2>
         <span className="mx-auto mt-6 block h-px w-16 bg-gradient-to-r from-transparent via-gold to-transparent" />
         <p className="mx-auto mt-6 max-w-xl font-old text-xl leading-relaxed text-white/80 italic sm:text-2xl">
-          Estetika od drveta, svetlost Belog grada i uredno servirani stolovi – mesto gde vreme teče{" "}
-          <span className="whitespace-nowrap text-gold">u vašem ritmu.</span>
+          {t(
+            "Estetika od drveta, svetlost Belog grada i uredno servirani stolovi – mesto gde vreme teče",
+            "Warm wood, the light of the White City and beautifully set tables – a place where time moves",
+          )}{" "}
+          <span className="whitespace-nowrap text-gold">{t("u vašem ritmu.", "at your own pace.")}</span>
         </p>
         <Link
           to="/galerija"
           className="group mt-10 inline-flex items-center gap-3 rounded-full border border-gold/50 bg-ink/40 py-2 pl-6 pr-2 text-xs font-semibold uppercase tracking-[0.18em] text-gold backdrop-blur-md transition-colors duration-300 hover:border-gold hover:bg-gold hover:text-ink"
         >
-          Pogledaj galeriju
+          {t("Pogledaj galeriju", "View the gallery")}
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gold text-ink transition-colors duration-300 group-hover:bg-ink group-hover:text-gold">
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" />
           </span>

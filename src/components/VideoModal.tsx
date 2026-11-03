@@ -4,6 +4,7 @@ import { motion } from "motion/react"
 import { useLenis } from "lenis/react"
 import { X } from "lucide-react"
 import { ease } from "../lib/motion"
+import { useT } from "../i18n/lang"
 
 type VideoModalProps = {
   src: string
@@ -16,6 +17,7 @@ type VideoModalProps = {
 export default function VideoModal({ src, poster, label, onClose }: VideoModalProps) {
   const lenis = useLenis()
   const closeRef = useRef<HTMLButtonElement>(null)
+  const t = useT()
 
   useEffect(() => {
     lenis?.stop()
@@ -47,7 +49,7 @@ export default function VideoModal({ src, poster, label, onClose }: VideoModalPr
         ref={closeRef}
         type="button"
         onClick={onClose}
-        aria-label="Zatvori video"
+        aria-label={t("Zatvori video", "Close video")}
         className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-gold hover:text-gold sm:right-8 sm:top-8"
       >
         <X className="h-6 w-6" />

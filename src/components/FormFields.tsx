@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react"
 import { AnimatePresence, motion } from "motion/react"
+import { useLang, useT } from "../i18n/lang"
 import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react"
 
 const fieldBase =
@@ -72,11 +73,12 @@ export function Stepper({
   max?: number
   suffix?: string
 }) {
+  const t = useT()
   const btn =
     "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/15 text-gold transition-colors hover:border-gold hover:bg-gold hover:text-ink disabled:pointer-events-none disabled:opacity-30"
   return (
     <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.03] p-1.5">
-      <button type="button" className={btn} onClick={() => onChange(Math.max(min, value - 1))} disabled={value <= min} aria-label="Manje">
+      <button type="button" className={btn} onClick={() => onChange(Math.max(min, value - 1))} disabled={value <= min} aria-label={t("Manje", "Fewer")}>
         <Minus className="h-4 w-4" />
       </button>
       <input
@@ -86,10 +88,10 @@ export function Stepper({
         value={value}
         onChange={(e) => onChange(Math.min(max, Math.max(min, Number(e.target.value) || min)))}
         className="w-full min-w-0 bg-transparent text-center font-serif text-2xl text-white [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none"
-        aria-label={suffix ?? "Broj"}
+        aria-label={suffix ?? t("Broj", "Number")}
       />
       {suffix && <span className="hidden shrink-0 text-xs uppercase tracking-[0.15em] text-white/40 sm:inline">{suffix}</span>}
-      <button type="button" className={btn} onClick={() => onChange(Math.min(max, value + 1))} disabled={value >= max} aria-label="Više">
+      <button type="button" className={btn} onClick={() => onChange(Math.min(max, value + 1))} disabled={value >= max} aria-label={t("Više", "More")}>
         <Plus className="h-4 w-4" />
       </button>
     </div>
@@ -133,9 +135,13 @@ const startOfToday = () => {
   const d = new Date()
   return new Date(d.getFullYear(), d.getMonth(), d.getDate())
 }
-const weekdays = ["Pon", "Uto", "Sre", "Čet", "Pet", "Sub", "Ned"]
-const monthName = new Intl.DateTimeFormat("sr-Latn", { month: "long", year: "numeric" })
-const longDate = new Intl.DateTimeFormat("sr-Latn", { weekday: "long", day: "numeric", month: "long" })
+const weekdays = {
+  sr: ["Pon", "Uto", "Sre", "Čet", "Pet", "Sub", "Ned"],
+  en: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+}
+const locale = { sr: "sr-Latn", en: "en-GB" }
+const monthName = (lang: "sr" | "en") => new Intl.DateTimeFormat(locale[lang], { month: "long", year: "numeric" })
+const longDate = (lang: "sr" | "en") => new Intl.DateTimeFormat(locale[lang], { weekday: "long", day: "numeric", month: "long" })
 
 export function DatePicker({
   value,
@@ -147,6 +153,8 @@ export function DatePicker({
   invalid?: boolean
 }) {
   const [open, setOpen] = useState(false)
+  const t = useT()
+  const { lang } = useLang()
   const today = startOfToday()
   const [view, setView] = useState(() => {
     const base = value ? fromKey(value) : today
@@ -180,7 +188,7 @@ export function DatePicker({
   const daysInMonth = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate()
   const isCurrentMonth = view.getFullYear() === today.getFullYear() && view.getMonth() === today.getMonth()
   const tomorrow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
-  const label = value ? longDate.format(fromKey(value)) : ""
+  const label = value ? longDate(lang).format(fromKey(value)) : ""
 
   return (
     <div ref={ref} className="relative">
@@ -192,7 +200,7 @@ export function DatePicker({
       >
         <CalendarDays className="h-5 w-5 shrink-0 text-gold" />
         <span className={`flex-1 truncate ${label ? "text-white first-letter:uppercase" : "text-white/30"}`}>
-          {label || "Izaberite datum"}
+          {label || t("Izaberite datum", "Choose a date")}
         </span>
         <ChevronDown className={`h-4 w-4 shrink-0 text-gold transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
@@ -213,16 +221,16 @@ export function DatePicker({
                 type="button"
                 onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))}
                 disabled={isCurrentMonth}
-                aria-label="Prethodni mesec"
+                aria-label={t("Prethodni mesec", "Previous month")}
                 className="flex h-9 w-9 items-center justify-center rounded-full text-gold transition-colors hover:bg-gold/10 disabled:opacity-20"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
-              <p className="font-serif text-lg text-white first-letter:uppercase">{monthName.format(view).replace(/\.$/, "")}</p>
+              <p className="font-serif text-lg text-white first-letter:uppercase">{monthName(lang).format(view).replace(/\.$/, "")}</p>
               <button
                 type="button"
                 onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))}
-                aria-label="Sledeći mesec"
+                aria-label={t("Sledeći mesec", "Next month")}
                 className="flex h-9 w-9 items-center justify-center rounded-full text-gold transition-colors hover:bg-gold/10"
               >
                 <ChevronRight className="h-4 w-4" />
@@ -231,7 +239,7 @@ export function DatePicker({
 
             {/* Dani */}
             <div className="mt-3 grid grid-cols-7 gap-1 text-center">
-              {weekdays.map((w) => (
+              {weekdays[lang].map((w) => (
                 <span key={w} className="py-1 text-[10px] font-semibold uppercase tracking-wider text-white/35">
                   {w}
                 </span>
@@ -268,8 +276,8 @@ export function DatePicker({
             {/* Brzi izbor */}
             <div className="mt-4 flex gap-2 border-t border-white/10 pt-4">
               {[
-                { label: "Danas", date: today },
-                { label: "Sutra", date: tomorrow },
+                { label: t("Danas", "Today"), date: today },
+                { label: t("Sutra", "Tomorrow"), date: tomorrow },
               ].map((q) => (
                 <button
                   key={q.label}
@@ -292,8 +300,8 @@ export function DatePicker({
 
 // TODO: uskladiti termine sa radnim vremenom kuhinje (restoran radi svaki dan 09–23h)
 const slotGroups = [
-  { label: "Ručak", from: 12 * 60, to: 15 * 60 + 30 },
-  { label: "Večera", from: 16 * 60, to: 22 * 60 },
+  { label: { sr: "Ručak", en: "Lunch" }, from: 12 * 60, to: 15 * 60 + 30 },
+  { label: { sr: "Večera", en: "Dinner" }, from: 16 * 60, to: 22 * 60 },
 ]
 
 export function TimeSlots({
@@ -307,6 +315,7 @@ export function TimeSlots({
   date: string
   invalid?: boolean
 }) {
+  const { lang } = useLang()
   // Za današnji dan sakrivamo termine koji su prošli (uz 30 min rezerve)
   const now = new Date()
   const isToday = date === toKey(startOfToday())
@@ -318,8 +327,8 @@ export function TimeSlots({
         const slots = []
         for (let m = g.from; m <= g.to; m += 30) slots.push(m)
         return (
-          <div key={g.label}>
-            <p className="mb-2 text-xs text-white/40">{g.label}</p>
+          <div key={g.label.sr}>
+            <p className="mb-2 text-xs text-white/40">{g.label[lang]}</p>
             <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
               {slots.map((m) => {
                 const t = `${pad(Math.floor(m / 60))}:${pad(m % 60)}`

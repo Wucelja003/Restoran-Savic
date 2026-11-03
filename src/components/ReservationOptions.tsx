@@ -5,11 +5,14 @@ import Reveal from "./Reveal"
 import { ease } from "../lib/motion"
 import { contact, phoneHref } from "../lib/contact"
 import { services } from "../lib/reservations"
+import { useLang, useT } from "../i18n/lang"
 
 const MotionLink = motion.create(Link)
 
 // Tri vrste rezervacije (sto, proslave, ketering) – svaka kartica vodi na svoju karticu na stranici Rezervacija
 export default function ReservationOptions() {
+  const t = useT()
+  const { lang } = useLang()
   return (
     <section className="relative overflow-x-clip border-t border-ink-line py-24 sm:py-32">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_100%,rgba(238,191,28,0.08),transparent)]" />
@@ -20,13 +23,13 @@ export default function ReservationOptions() {
           <div>
             <div className="flex items-center gap-4">
               <span className="streak-x" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Rezervacije</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Rezervacije", "Reservations")}</span>
             </div>
             <h2 className="mt-6 text-4xl sm:text-5xl">
-              Rezervišite{" "}
-              <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">kod nas</span>
+              {t("Rezervišite", "Book")}{" "}
+              <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text text-transparent">{t("kod nas", "with us")}</span>
             </h2>
-            <p className="mt-4 max-w-md text-white/55">Sto za vaše društvo, sala za slavlje ili naša kuhinja na vašem događaju.</p>
+            <p className="mt-4 max-w-md text-white/55">{t("Sto za vaše društvo, sala za slavlje ili naša kuhinja na vašem događaju.", "A table for your party, a hall for your celebration or our kitchen at your event.")}</p>
           </div>
 
           <a
@@ -37,7 +40,7 @@ export default function ReservationOptions() {
               <Phone className="h-4 w-4" />
             </span>
             <span>
-              <span className="block text-[10px] uppercase tracking-[0.2em] text-white/45">Ili nas pozovite</span>
+              <span className="block text-[10px] uppercase tracking-[0.2em] text-white/45">{t("Ili nas pozovite", "Or give us a call")}</span>
               <span className="block font-serif text-lg text-white transition-colors group-hover:text-gold">{contact.phone}</span>
             </span>
           </a>
@@ -59,7 +62,7 @@ export default function ReservationOptions() {
               >
                 <img
                   src={s.image}
-                  alt={s.title}
+                  alt={s.title[lang]}
                   loading="lazy"
                   className="absolute inset-0 -z-10 h-full w-full scale-105 object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-115"
                 />
@@ -75,12 +78,12 @@ export default function ReservationOptions() {
 
                 {/* Dole: naslov, podnaslov i poziv */}
                 <div>
-                  <h3 className="text-3xl sm:text-[2.1rem]">{s.title}</h3>
+                  <h3 className="text-3xl sm:text-[2.1rem]">{s.title[lang]}</h3>
                   <span className="mt-4 block h-px w-10 bg-gold transition-all duration-700 group-hover:w-20" />
-                  <p className="mt-4 font-old text-lg leading-snug text-white/75 italic">{s.subtitle}</p>
+                  <p className="mt-4 font-old text-lg leading-snug text-white/75 italic">{s.subtitle[lang]}</p>
 
                   <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-5">
-                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Rezerviši</span>
+                    <span className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">{t("Rezerviši", "Book now")}</span>
                     <span className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/50 text-gold transition-all duration-500 group-hover:rotate-45 group-hover:border-gold group-hover:bg-gold group-hover:text-ink">
                       <ArrowUpRight className="h-4 w-4" />
                     </span>

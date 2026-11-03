@@ -10,32 +10,41 @@ import pica from "../assets/menu/pica.jpg"
 export const menuCategories = [
   {
     id: "predjela",
-    name: "Predjela",
-    tagline: "Hladna i topla predjela – od domaćeg kajmaka do tatar bifteka.",
+    name: { sr: "Predjela", en: "Starters" },
+    tagline: {
+      sr: "Hladna i topla predjela – od domaćeg kajmaka do tatar bifteka.",
+      en: "Cold and hot starters – from homemade kajmak to steak tartare.",
+    },
     image: predjela,
   },
   {
     id: "glavna-jela",
-    name: "Glavna jela",
-    tagline: "Doručak, čorbe, roštilj, jela po porudžbini, gotova jela, salate i prilozi.",
+    name: { sr: "Glavna jela", en: "Main Courses" },
+    tagline: {
+      sr: "Doručak, čorbe, roštilj, jela po porudžbini, gotova jela, salate i prilozi.",
+      en: "Breakfast, soups, grill, dishes made to order, home-style classics, salads and sides.",
+    },
     image: glavnaJela,
   },
   {
     id: "pecenje",
-    name: "Pečenje",
-    tagline: "Jagnjeće i praseće pečenje i teletina ispod sača.",
+    name: { sr: "Pečenje", en: "Spit Roasts" },
+    tagline: {
+      sr: "Jagnjeće i praseće pečenje i teletina ispod sača.",
+      en: "Spit-roasted lamb and suckling pig, and veal slow-baked under the sač.",
+    },
     image: pecenje,
   },
   {
     id: "dezerti",
-    name: "Dezerti",
-    tagline: "Palačinke, domaće pite i orasnice.",
+    name: { sr: "Dezerti", en: "Desserts" },
+    tagline: { sr: "Palačinke, domaće pite i orasnice.", en: "Crêpes, homemade pies and walnut cookies." },
     image: dezerti,
   },
   {
     id: "pica",
-    name: "Pića",
-    tagline: "Kafa, sokovi, pivo, domaće rakije, žestina i vina.",
+    name: { sr: "Pića", en: "Drinks" },
+    tagline: { sr: "Kafa, sokovi, pivo, domaće rakije, žestina i vina.", en: "Coffee, soft drinks, beer, Serbian rakija, spirits and wine." },
     image: pica,
   },
 ] as const

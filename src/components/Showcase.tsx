@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { AnimatePresence, motion, useScroll, useTransform, type Variants } from "motion/react"
 import { Play } from "lucide-react"
 import { ease } from "../lib/motion"
+import { useLang, useT, type Text } from "../i18n/lang"
 import PreviewVideo from "./PreviewVideo"
 import VideoModal from "./VideoModal"
 import bigImg from "../assets/pecenje/pecenje-veliko.jpg"
@@ -14,11 +15,11 @@ const PECENJE_VIDEO = "/video/pecenje.mp4"
 
 type Row = {
   image: string
-  alt: string
-  subtitle: string
-  title: string
-  text: string
-  link?: { to: string; label: string }
+  alt: Text
+  subtitle: Text
+  title: Text
+  text: Text
+  link?: { to: string; label: Text }
   // ako postoji, umesto slike ide video u prirodnoj veličini (9:16), klik pušta sa zvukom
   video?: string
 }
@@ -27,27 +28,36 @@ type Row = {
 const rows: Row[] = [
   {
     image: pecenjeImg,
-    alt: "Pečenje na tacni",
-    subtitle: "Ponos naše kuće",
-    title: "Pečenje kao nekada",
-    text: "Pečeno polako, satima, dok korica ne postane zlatna i hrskava, a meso toliko mekano da se topi. Recept po kome nas gosti pamte generacijama.",
-    link: { to: "/meni/glavna-jela", label: "Glavna jela" },
+    alt: { sr: "Pečenje na tacni", en: "Roast meat on a platter" },
+    subtitle: { sr: "Ponos naše kuće", en: "The pride of our house" },
+    title: { sr: "Pečenje kao nekada", en: "Roasted the old-fashioned way" },
+    text: {
+      sr: "Pečeno polako, satima, dok korica ne postane zlatna i hrskava, a meso toliko mekano da se topi. Recept po kome nas gosti pamte generacijama.",
+      en: "Slow-roasted for hours, until the crackling turns golden and crisp and the meat is so tender it melts in your mouth. The recipe our guests have remembered us for, for generations.",
+    },
+    link: { to: "/meni/glavna-jela", label: { sr: "Glavna jela", en: "Main courses" } },
   },
   {
     image: pecenjePoster,
-    alt: "Pečenje na ražnju",
-    subtitle: "Sa ražnja",
-    title: "Pečenje na ražnju",
-    text: "Nad žarom, polako i sa strpljenjem koje se ne može ubrzati – pogledajte kako nastaje naše pečenje.",
+    alt: { sr: "Pečenje na ražnju", en: "Meat roasting on the spit" },
+    subtitle: { sr: "Sa ražnja", en: "Off the spit" },
+    title: { sr: "Pečenje na ražnju", en: "Spit-roasted" },
+    text: {
+      sr: "Nad žarom, polako i sa strpljenjem koje se ne može ubrzati – pogledajte kako nastaje naše pečenje.",
+      en: "Over glowing embers, slowly and with a patience that cannot be rushed – see how our roast comes to life.",
+    },
     video: PECENJE_VIDEO,
   },
   {
     image: stoImg,
-    alt: "Postavljen sto u restoranu",
-    subtitle: "Za veće društvo",
-    title: "Slavlja i proslave",
-    text: "Porodična okupljanja, slave i proslave – spremamo pečenje i punu trpezu za vaše društvo, po vašoj meri.",
-    link: { to: "/rezervacija#proslave", label: "Rezerviši salu" },
+    alt: { sr: "Postavljen sto u restoranu", en: "A table set in the restaurant" },
+    subtitle: { sr: "Za veće društvo", en: "For larger parties" },
+    title: { sr: "Slavlja i proslave", en: "Feasts and celebrations" },
+    text: {
+      sr: "Porodična okupljanja, slave i proslave – spremamo pečenje i punu trpezu za vaše društvo, po vašoj meri.",
+      en: "Family gatherings, feast days and celebrations – we prepare the roast and a generous table for your party, just the way you like it.",
+    },
+    link: { to: "/rezervacija#proslave", label: { sr: "Rezerviši salu", en: "Book the hall" } },
   },
 ]
 
@@ -68,6 +78,8 @@ export default function Showcase() {
   const bigY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"])
   const [videoOpen, setVideoOpen] = useState(false)
   const closeVideo = useCallback(() => setVideoOpen(false), [])
+  const t = useT()
+  const { lang } = useLang()
 
   return (
     <section ref={sectionRef} className="relative border-y border-ink-line">
@@ -77,7 +89,7 @@ export default function Showcase() {
         <div className="relative min-h-[75svh] overflow-hidden bg-ink lg:min-h-0">
           <motion.img
             src={bigImg}
-            alt="Pečenje – specijalitet restorana Savić"
+            alt={t("Pečenje – specijalitet restorana Savić", "Roast meat – a Restaurant Savić specialty")}
             loading="lazy"
             style={{ y: bigY }}
             className="absolute inset-x-0 -top-[8%] h-[116%] w-full object-cover"
@@ -95,16 +107,16 @@ export default function Showcase() {
               variants={textItem}
               className="inline-block rounded-full border border-gold/40 bg-ink/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.25em] text-gold backdrop-blur-md"
             >
-              Po čemu nas pamte
+              {t("Po čemu nas pamte", "What we are known for")}
             </motion.span>
             <motion.h2
               variants={textItem}
               className="mt-4 bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text pb-2 text-6xl leading-none text-transparent sm:text-7xl lg:text-8xl"
             >
-              Pečenje
+              {t("Pečenje", "Roasts")}
             </motion.h2>
             <motion.p variants={textItem} className="mt-3 max-w-sm text-white/70">
-              Pečeno polako, posluženo sa ljubavlju – kao što se radi već čitav vek.
+              {t("Pečeno polako, posluženo sa ljubavlju – kao što se radi već čitav vek.", "Slowly roasted, served with love – just as it has been done for a century.")}
             </motion.p>
           </motion.div>
         </div>
@@ -112,12 +124,12 @@ export default function Showcase() {
         {/* Desno – mozaik: slika / tekst, pa obrnuto */}
         <div className="grid gap-px">
           {rows.map((row, i) => (
-            <div key={row.title} className="grid gap-px sm:grid-cols-2">
+            <div key={row.title.sr} className="grid gap-px sm:grid-cols-2">
               {row.video ? (
                 <button
                   type="button"
                   onClick={() => setVideoOpen(true)}
-                  aria-label={`Pogledaj video – ${row.title}`}
+                  aria-label={`${t("Pogledaj video", "Watch the video")} – ${row.title[lang]}`}
                   className={`group relative aspect-[9/16] w-full cursor-pointer overflow-hidden bg-ink ${i % 2 === 1 ? "sm:order-2" : ""}`}
                 >
                   <PreviewVideo
@@ -142,7 +154,7 @@ export default function Showcase() {
                 >
                   <img
                     src={row.image}
-                    alt={row.alt}
+                    alt={row.alt[lang]}
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110"
                   />
@@ -158,13 +170,13 @@ export default function Showcase() {
                 variants={textStagger}
               >
                 <motion.p variants={textItem} className="text-[10px] font-semibold uppercase tracking-[0.28em] text-gold">
-                  {row.subtitle}
+                  {row.subtitle[lang]}
                 </motion.p>
                 <motion.h3 variants={textItem} className="mt-4 text-3xl leading-tight xl:text-4xl">
-                  {row.title}
+                  {row.title[lang]}
                 </motion.h3>
                 <motion.p variants={textItem} className="mt-4 text-sm leading-relaxed text-white/55">
-                  {row.text}
+                  {row.text[lang]}
                 </motion.p>
                 <motion.div variants={textItem} className="mt-7">
                   {row.link ? (
@@ -172,7 +184,7 @@ export default function Showcase() {
                       to={row.link.to}
                       className="group/link relative inline-block pb-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-gold"
                     >
-                      {row.link.label}
+                      {row.link.label[lang]}
                       <span className="absolute bottom-0 left-0 h-px w-full origin-left bg-gold/40" />
                       <span className="absolute bottom-0 left-0 h-px w-full origin-right scale-x-0 bg-gold transition-transform duration-500 group-hover/link:origin-left group-hover/link:scale-x-100" />
                     </Link>
@@ -183,7 +195,7 @@ export default function Showcase() {
                       className="group/link relative inline-flex items-center gap-2 pb-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-gold"
                     >
                       <Play className="h-3.5 w-3.5 fill-current" />
-                      Pogledaj video
+                      {t("Pogledaj video", "Watch the video")}
                       <span className="absolute bottom-0 left-0 h-px w-full origin-left bg-gold/40" />
                       <span className="absolute bottom-0 left-0 h-px w-full origin-right scale-x-0 bg-gold transition-transform duration-500 group-hover/link:origin-left group-hover/link:scale-x-100" />
                     </button>
@@ -196,7 +208,7 @@ export default function Showcase() {
       </div>
 
       <AnimatePresence>
-        {videoOpen && <VideoModal src={PECENJE_VIDEO} poster={pecenjePoster} label="Pečenje na ražnju" onClose={closeVideo} />}
+        {videoOpen && <VideoModal src={PECENJE_VIDEO} poster={pecenjePoster} label={t("Pečenje na ražnju", "Spit-roasted")} onClose={closeVideo} />}
       </AnimatePresence>
     </section>
   )

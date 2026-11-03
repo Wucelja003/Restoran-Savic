@@ -5,12 +5,14 @@ import { ArrowRight, Play } from "lucide-react"
 import VideoModal from "./VideoModal"
 import PreviewVideo from "./PreviewVideo"
 import { ease } from "../lib/motion"
+import { useT } from "../i18n/lang"
 import logo from "../assets/logo.png"
 import videoPoster from "../assets/posters/introduce.jpg"
 
 const VIDEO_SRC = "/video/videoSavicIntroduce.mp4"
 
 function VideoShowcase() {
+  const t = useT()
   const [open, setOpen] = useState(false)
   const close = useCallback(() => setOpen(false), [])
 
@@ -22,7 +24,7 @@ function VideoShowcase() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label="Pogledaj video"
+        aria-label={t("Pogledaj video", "Watch the video")}
         className="group relative block aspect-[9/16] w-full cursor-pointer overflow-hidden rounded-[1.75rem] border border-white/10 shadow-[0_30px_70px_rgba(0,0,0,0.6)] transition-shadow duration-300 hover:shadow-[0_0_60px_rgba(238,191,28,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
       >
         <PreviewVideo
@@ -37,7 +39,7 @@ function VideoShowcase() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-gold" />
           </span>
-          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/85">Restoran Savić</span>
+          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/85">{t("Restoran Savić", "Restaurant Savić")}</span>
         </div>
 
         {/* Dugme za puštanje */}
@@ -49,18 +51,19 @@ function VideoShowcase() {
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-28 items-end justify-center bg-gradient-to-t from-ink/70 to-transparent pb-5">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-white/85">Pogledaj video</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-white/85">{t("Pogledaj video", "Watch the video")}</span>
         </div>
       </button>
 
-      <p className="mt-4 text-center text-xs uppercase tracking-[0.2em] text-white/40">Atmosfera našeg restorana</p>
+      <p className="mt-4 text-center text-xs uppercase tracking-[0.2em] text-white/40">{t("Atmosfera našeg restorana", "The atmosphere of our restaurant")}</p>
 
-      <AnimatePresence>{open && <VideoModal src={VIDEO_SRC} poster={videoPoster} label="Video – Restoran Savić" onClose={close} />}</AnimatePresence>
+      <AnimatePresence>{open && <VideoModal src={VIDEO_SRC} poster={videoPoster} label={t("Video – Restoran Savić", "Video – Restaurant Savić")} onClose={close} />}</AnimatePresence>
     </div>
   )
 }
 
 export default function Introduce() {
+  const t = useT()
   return (
     <section className="relative overflow-x-clip py-20 sm:py-28">
       {/* Logo i kicker */}
@@ -77,7 +80,7 @@ export default function Introduce() {
           aria-hidden="true"
           className="h-20 w-auto [filter:drop-shadow(0_0_18px_rgba(238,191,28,0.35))]"
         />
-        <span className="text-sm font-medium uppercase tracking-[0.3em] text-gold">100 godina tradicije</span>
+        <span className="text-sm font-medium uppercase tracking-[0.3em] text-gold">{t("100 godina tradicije", "100 years of tradition")}</span>
       </motion.div>
 
       <div className="mx-auto grid max-w-6xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
@@ -90,13 +93,13 @@ export default function Introduce() {
         >
           <div className="flex items-center gap-4">
             <span className="streak-x" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Porodična tradicija</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Porodična tradicija", "A family tradition")}</span>
           </div>
 
           <h2 className="mt-7 text-4xl leading-[1.1] sm:text-5xl lg:text-6xl">
-            Ukus koji se prenosi{" "}
+            {t("Ukus koji se prenosi", "Flavours handed down")}{" "}
             <span className="bg-gradient-to-b from-[#fbe7a1] via-gold to-gold-dark bg-clip-text pb-[0.1em] text-transparent">
-              s kolena na koleno
+              {t("s kolena na koleno", "from generation to generation")}
             </span>
             <span className="text-gold">.</span>
           </h2>
@@ -106,11 +109,15 @@ export default function Introduce() {
             <span className="streak-y" />
             <div className="max-w-xl space-y-5">
               <p className="text-lg leading-relaxed text-white/80 sm:text-xl">
-                <span className="text-white">Već čitav vek okupljamo porodice i prijatelji.</span>
+                <span className="text-white">
+                  {t("Već čitav vek okupljamo porodice i prijatelji.", "For a whole century, we have been bringing families and friends together.")}
+                </span>
               </p>
               <p className="leading-relaxed text-white/55">
-                Spremamo jela od svežih, domaćih namirnica, po receptima koje čuvamo generacijama. Bilo da dolazite na
-                ručak, večeru ili proslavu – potrudićemo se da se osećate kao kod kuće.
+                {t(
+                  "Spremamo jela od svežih, domaćih namirnica, po receptima koje čuvamo generacijama. Bilo da dolazite na ručak, večeru ili proslavu – potrudićemo se da se osećate kao kod kuće.",
+                  "We cook with fresh, local ingredients, following recipes our family has kept for generations. Whether you join us for lunch, dinner or a celebration, we will make you feel right at home.",
+                )}
               </p>
             </div>
           </div>
@@ -119,7 +126,7 @@ export default function Introduce() {
             to="/o-nama"
             className="btn-flow group relative mt-11 inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.15em]"
           >
-            Više o nama
+            {t("Više o nama", "More about us")}
             <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>

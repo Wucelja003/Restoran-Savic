@@ -7,6 +7,7 @@ import { navLinks } from "./navLinks"
 import ReserveButton from "./ReserveButton"
 import LanguageSwitcher from "./LanguageSwitcher"
 import { ease, useEnterDelay } from "../lib/motion"
+import { useLang, useT } from "../i18n/lang"
 
 // Rezervacija ima svoje dugme sa desne strane, pa je ne prikazujemo među linkovima
 const links = navLinks.filter((link) => link.to !== "/rezervacija")
@@ -14,6 +15,8 @@ const links = navLinks.filter((link) => link.to !== "/rezervacija")
 const roll = "duration-800 ease-[cubic-bezier(0.22,1,0.36,1)]"
 
 export default function Navbar() {
+  const t = useT()
+  const { lang } = useLang()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const enterDelay = useEnterDelay()
@@ -43,9 +46,9 @@ export default function Navbar() {
         scrolled || open ? "border-b border-ink-line bg-ink/95 backdrop-blur" : "border-b border-transparent bg-transparent"
       }`}
     >
-      <nav className="flex h-24 items-center justify-between px-4 sm:px-6 lg:px-10" aria-label="Glavna navigacija">
+      <nav className="flex h-24 items-center justify-between px-4 sm:px-6 lg:px-10" aria-label={t("Glavna navigacija", "Main navigation")}>
         <div className="flex items-center gap-14">
-          <Link to="/" onClick={() => setOpen(false)} aria-label="Restoran Savić – početna" className="shrink-0">
+          <Link to="/" onClick={() => setOpen(false)} aria-label={t("Restoran Savić – početna", "Restaurant Savić – home")} className="shrink-0">
             <img src={logo} alt="Restoran Savić" className="h-16 w-auto" />
           </Link>
 
@@ -66,13 +69,13 @@ export default function Navbar() {
                             isActive ? "text-gold" : "text-neutral-300"
                           }`}
                         >
-                          {link.label}
+                          {link.label[lang]}
                         </span>
                         <span
                           aria-hidden
                           className={`absolute left-0 top-full block text-gold transition-transform ${roll} group-hover:-translate-y-full group-focus-visible:-translate-y-full`}
                         >
-                          {link.label}
+                          {link.label[lang]}
                         </span>
                       </span>
                       {/* Linija ulazi sleva, izlazi udesno */}
@@ -100,7 +103,7 @@ export default function Navbar() {
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label={open ? "Zatvori meni" : "Otvori meni"}
+            aria-label={open ? t("Zatvori meni", "Close menu") : t("Otvori meni", "Open menu")}
             className="flex h-11 w-11 items-center justify-center text-gold lg:hidden"
           >
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -129,7 +132,7 @@ export default function Navbar() {
                       `block py-3 text-sm uppercase tracking-[0.25em] ${isActive ? "text-gold" : "text-neutral-300"}`
                     }
                   >
-                    {link.label}
+                    {link.label[lang]}
                   </NavLink>
                 </li>
               ))}

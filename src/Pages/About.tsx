@@ -8,6 +8,7 @@ import { PaperSheet, WrittenTitle } from "../components/Vintage"
 import PreviewVideo from "../components/PreviewVideo"
 import VideoModal from "../components/VideoModal"
 import { ease } from "../lib/motion"
+import { usePick, useT } from "../i18n/lang"
 import headerImg from "../assets/images/restoran.jpg"
 import fatherImg from "../assets/images/otac.jpg"
 import logo from "../assets/logo.png"
@@ -17,20 +18,41 @@ import storyPoster3 from "../assets/posters/prica-3.jpg"
 
 // TODO: prava priča – tekst je privremen
 const letter = {
-  greeting: "Dragi gosti,",
+  greeting: { sr: "Dragi gosti,", en: "Dear guests," },
   paragraphs: [
-    "Pre više od sto godina naša porodica otvorila je vrata svoje kuće gostima. Od tada se mnogo toga promenilo – grad, ulice, ljudi – ali ono najvažnije ostalo je isto: topla reč, pun sto i hrana spremljena kao nekada.",
-    "Recepti su se prenosili s kolena na koleno, zapisivani rukom i čuvani kao najveće blago. Svaka generacija dodala je ponešto svoje, ali nijedna nije zaboravila odakle smo krenuli.",
-    "Danas, kada sednete za naš sto, niste samo gost restorana – postajete deo priče koja traje čitav vek.",
+    {
+      sr: "Pre više od sto godina naša porodica otvorila je vrata svoje kuće gostima. Od tada se mnogo toga promenilo – grad, ulice, ljudi – ali ono najvažnije ostalo je isto: topla reč, pun sto i hrana spremljena kao nekada.",
+      en: "More than a hundred years ago, our family opened the doors of its home to guests. A great deal has changed since then – the city, the streets, the people – but what matters most has stayed the same: a kind word, a full table and food made the way it always has been.",
+    },
+    {
+      sr: "Recepti su se prenosili s kolena na koleno, zapisivani rukom i čuvani kao najveće blago. Svaka generacija dodala je ponešto svoje, ali nijedna nije zaboravila odakle smo krenuli.",
+      en: "Our recipes were handed down from one generation to the next, written by hand and guarded like our greatest treasure. Each generation added a touch of its own, yet none ever forgot where we began.",
+    },
+    {
+      sr: "Danas, kada sednete za naš sto, niste samo gost restorana – postajete deo priče koja traje čitav vek.",
+      en: "Today, when you sit down at our table, you are not just a guest in a restaurant – you become part of a story a century in the making.",
+    },
   ],
-  closing: "S poštovanjem,",
+  closing: { sr: "S poštovanjem,", en: "With warm regards," },
 }
 
 // TODO: proveriti tekstove vrednosti
 const values = [
-  { title: "Recepti", text: "Zapisani rukom, čuvani generacijama i spremani bez prečica." },
-  { title: "Domaćinstvo", text: "Svaki gost je dočekan kao član porodice – toplo i od srca." },
-  { title: "Pečenje", text: "Domaći jaganjci iz peštera i praseće pečenje, na tihoj vatri, baš kao nekada." },
+  {
+    title: { sr: "Recepti", en: "Recipes" },
+    text: { sr: "Zapisani rukom, čuvani generacijama i spremani bez prečica.", en: "Written by hand, treasured for generations and cooked without shortcuts." },
+  },
+  {
+    title: { sr: "Domaćinstvo", en: "Hospitality" },
+    text: { sr: "Svaki gost je dočekan kao član porodice – toplo i od srca.", en: "Every guest is welcomed like family – warmly and from the heart." },
+  },
+  {
+    title: { sr: "Pečenje", en: "Roasts" },
+    text: {
+      sr: "Domaći jaganjci iz peštera i praseće pečenje, na tihoj vatri, baš kao nekada.",
+      en: "Lamb from the Pešter highlands and suckling pig, slow-roasted over a gentle fire, just like in the old days.",
+    },
+  },
 ]
 
 // Potpis se ispiše kad se završi naslov "Naša priča", pa zatim pečat
@@ -39,6 +61,8 @@ const SIGNATURE_DELAY = 1.4 // s
 function Letter() {
   const ref = useRef<HTMLDivElement>(null)
   const started = useInView(ref, { once: true, margin: "0px 0px -20% 0px" })
+  const t = useT()
+  const pick = usePick()
 
   return (
     <PaperSheet className="relative z-10 -rotate-1 px-7 pb-14 pt-24 sm:px-14 sm:pb-16 sm:pt-28 lg:pr-32 lg:pt-16">
@@ -55,15 +79,15 @@ function Letter() {
         />
 
         <WrittenTitle show={started} className="-ml-3 font-script text-5xl text-[#5b3a1a] sm:text-6xl">
-          Naša priča
+          {t("Naša priča", "Our story")}
         </WrittenTitle>
 
         <div className="mt-6 space-y-5 font-old text-lg leading-relaxed sm:text-xl">
-          <p className="italic">{letter.greeting}</p>
+          <p className="italic">{pick(letter.greeting)}</p>
           {letter.paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
+            <p key={i}>{pick(p)}</p>
           ))}
-          <p className="pt-4 italic">{letter.closing}</p>
+          <p className="pt-4 italic">{pick(letter.closing)}</p>
         </div>
 
         {/* Potpis */}
@@ -75,7 +99,7 @@ function Letter() {
             duration={1.8}
             className="-ml-3 font-script text-4xl text-[#5b3a1a] sm:text-5xl"
           >
-            Restoran Savić
+            {t("Restoran Savić", "Restaurant Savić")}
           </WrittenTitle>
           <svg viewBox="0 0 240 20" className="absolute -bottom-2 left-0 w-56 text-[#5b3a1a]" aria-hidden>
             <motion.path
@@ -96,6 +120,7 @@ function Letter() {
 }
 
 function FatherPhoto() {
+  const t = useT()
   return (
     <motion.figure
       className="vintage-photo relative mx-auto w-[260px] sm:w-[320px] lg:mx-0"
@@ -109,7 +134,7 @@ function FatherPhoto() {
       <span className="tape -right-8 top-3 rotate-[35deg]" />
 
       <div className="relative overflow-hidden">
-        <img src={fatherImg} alt="Otac našeg vlasnika" className="aspect-[7/9] w-full object-cover" />
+        <img src={fatherImg} alt={t("Otac našeg vlasnika", "Our owner's father")} className="aspect-[7/9] w-full object-cover" />
         <span className="photo-vignette" />
       </div>
 
@@ -152,13 +177,14 @@ function StoryVideo({ src, poster, index }: { src: string; poster: string; index
   const [open, setOpen] = useState(false)
   const close = useCallback(() => setOpen(false), [])
   const tilt = ["-rotate-2", "rotate-1", "-rotate-1"][index % 3]
+  const t = useT()
 
   return (
     <Reveal delay={index * 0.15}>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        aria-label={`Pogledaj video ${index + 1}`}
+        aria-label={`${t("Pogledaj video", "Watch video")} ${index + 1}`}
         className={`vintage-photo group relative mx-auto block w-full max-w-[320px] transition-transform duration-500 will-change-transform hover:-translate-y-2 hover:rotate-0 ${tilt}`}
       >
         <div className="relative aspect-[9/16] overflow-hidden">
@@ -180,16 +206,18 @@ function StoryVideo({ src, poster, index }: { src: string; poster: string; index
       </button>
 
       <AnimatePresence>
-        {open && <VideoModal src={src} poster={poster} label="Priča o Restoranu Savić" onClose={close} />}
+        {open && <VideoModal src={src} poster={poster} label={t("Priča o Restoranu Savić", "The story of Restaurant Savić")} onClose={close} />}
       </AnimatePresence>
     </Reveal>
   )
 }
 
 export default function About() {
+  const t = useT()
+  const pick = usePick()
   return (
     <>
-      <PageHeader eyebrow="Vek tradicije" title="O nama" image={headerImg} imageClassName="sepia-[0.6]" />
+      <PageHeader eyebrow={t("Vek tradicije", "A century of tradition")} title={t("O nama", "About us")} image={headerImg} imageClassName="sepia-[0.6]" />
 
       {/* Pismo i fotografija */}
       <section className="relative overflow-x-clip py-24 sm:py-32">
@@ -199,13 +227,13 @@ export default function About() {
           <Reveal className="text-center">
             <div className="flex items-center justify-center gap-4">
               <span className="streak-x hidden sm:block" />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Iz porodične arhive</span>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Iz porodične arhive", "From the family archive")}</span>
               <span className="streak-x hidden sm:block" />
             </div>
           </Reveal>
           <div className="mt-4 text-center">
             <WrittenTitle className="font-script text-6xl text-gold sm:text-7xl lg:text-8xl" duration={2}>
-              Sto godina za istim stolom
+              {t("Sto godina za istim stolom", "A hundred years at the same table")}
             </WrittenTitle>
           </div>
 
@@ -227,16 +255,16 @@ export default function About() {
             <Reveal>
               <div className="flex items-center justify-center gap-4">
                 <span className="streak-x hidden sm:block" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">Ono što čuvamo</span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gold">{t("Ono što čuvamo", "What we hold dear")}</span>
                 <span className="streak-x hidden sm:block" />
               </div>
             </Reveal>
-            <WrittenTitle className="mt-4 font-script text-5xl text-gold sm:text-6xl">Naše vrednosti</WrittenTitle>
+            <WrittenTitle className="mt-4 font-script text-5xl text-gold sm:text-6xl">{t("Naše vrednosti", "Our values")}</WrittenTitle>
           </div>
 
           <div className="mt-16 grid gap-10 sm:grid-cols-3 sm:gap-8">
             {values.map((v, i) => (
-              <ValueNote key={v.title} title={v.title} text={v.text} index={i} />
+              <ValueNote key={v.title.sr} title={pick(v.title)} text={pick(v.text)} index={i} />
             ))}
           </div>
         </div>
@@ -247,7 +275,7 @@ export default function About() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="text-center">
             <WrittenTitle className="font-script text-5xl text-gold sm:text-6xl lg:text-7xl" duration={1.8}>
-              Priča o Restoranu Savić
+              {t("Priča o Restoranu Savić", "The story of Restaurant Savić")}
             </WrittenTitle>
           </div>
 
@@ -264,17 +292,17 @@ export default function About() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(50%_60%_at_50%_50%,rgba(238,191,28,0.08),transparent)]" />
         <div className="relative px-4">
           <WrittenTitle className="font-script text-6xl text-gold sm:text-8xl" duration={2.2}>
-            Dobro došli u našu kuću
+            {t("Dobro došli u našu kuću", "Welcome to our home")}
           </WrittenTitle>
           <Reveal delay={0.6}>
             <p className="mx-auto mt-6 max-w-md font-old text-xl italic text-white/60">
-              Za istim stolom, uz iste recepte – kao nekada.
+              {t("Za istim stolom, uz iste recepte – kao nekada.", "The same table, the same recipes – just as it always was.")}
             </p>
             <Link
               to="/rezervacija"
               className="btn-flow group relative mt-10 inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3.5 text-sm font-semibold uppercase tracking-[0.15em]"
             >
-              Rezerviši sto
+              {t("Rezerviši sto", "Book a table")}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Reveal>
